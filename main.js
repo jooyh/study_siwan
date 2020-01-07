@@ -4,6 +4,8 @@ var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/common/template.js');
 
+//pm2 사용시 서버 실행 명령어 
+//pm2 start main.js --watch
 
 // 서버 생성
 var app = http.createServer(function(request,response){
