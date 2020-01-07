@@ -24,9 +24,6 @@ var app = http.createServer(function(request,response){
         });
     });
     // }
-
-
-    
 });
 //서버 실행 (3000 포트)....
 app.listen(3000);
