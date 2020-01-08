@@ -1,7 +1,11 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
-var template = require('./lib/template.js');
+var qs = require('querystring');
+var template = require('./lib/common/template.js');
+
+//pm2 사용시 서버 실행 명령어 
+//pm2 start main.js --watch
 
 // 서버 생성
 var app = http.createServer(function(request,response){
@@ -14,17 +18,33 @@ var app = http.createServer(function(request,response){
 
     if(pathname == "/") pathname = "main";
 
+    //resource 요청의 경우
     if(_url.search("resources") != -1){
         fs.readFile(`.${pathname}`,`utf8`,function(err,resource){
-            console.log(pathname,_url);
             response.writeHead(200);
             response.end(resource);
         });
+    // 그외 페이지 요청의 경우
     }else{
+        var test = '';
+        request.on('data', function(data){
+            console.log('start',data);
+            test += data;
+        });
+        request.on('end',function(){
+            var temp = null;
+            if(test){
+                console.log(test);
+                temp = qs.parse(test);
+                console.log('end',temp);
+                console.log('end',temp.email);
+            } 
+        });
+
         fs.readFile(`./html/${pathname}.html`, 'utf8', function(err, content){
             var html = template.getHtml(content);
             response.writeHead(200);
-            response.end(html);
+            response.end(html); 
         });
     }
 });
