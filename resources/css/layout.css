@@ -1,7 +1,8 @@
 * {margin:0;padding:0;box-sizing:border-box;}
 a {text-decoration:none;color:#000;}
 /***  LOGIN  ***/
-.login-visual {width:100%;height:200px;background: #ccc;}
+.login-visual {width:100%;height:200px;background: #ccc;transition:height .5s;}
+.login-visual .btn-back {display:none;width:30px;height:30px;border:0;background:green;font-size:0;}
 .login-content {width:90%;margin:0 auto;}
 .login-content .login-tit {font-size:30px;font-weight:700;}
 .login-content .login-txt {font-size:20px;color:#ccc;}
@@ -18,6 +19,7 @@ a {text-decoration:none;color:#000;}
 
 /* join */
 .login-visual.h-animate {height:150px;}
+.login-visual.h-animate .btn-back {display:inline-block;}
 .profile-sumnail {position:relative;width:100px;height:100px;margin:0 auto;margin-top:-50px;background:#333;border-radius:50%;}
 .profile-sumnail:after {content:'';position:absolute;right:5px;bottom:0;width:20px;height:20px;background:#000;border-radius:50%;}
 .profile-sumnail input[type="file"] {width:100%;height:100%;opacity:0;}
