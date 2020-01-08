@@ -3,7 +3,7 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/common/template.js');
-var join = require('./lib/common/join.js');
+// var join = require('./lib/common/join.js');
 
 //pm2 사용시 서버 실행 명령어 
 //pm2 start main.js --watch

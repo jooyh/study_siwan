@@ -1,12 +1,60 @@
-<form action="/login" method="POST">
-    <div class="login-area" style="width: 300px; height: 200px; margin: auto;">
-        <p> 
-            E-MAIL : <input type="email" name="email"/>
-        </p>
-        <p> 
-            PASS   : <input type="password" name="pw"/>
-        </p>
-        <button type="submit"> Login </button>
-        <button> Join </button>
+<div class="login-visual h-animate">
+    <div class="logo"></div>
+</div>
+<!-- <div class="login-content">
+    <h2 class="login-tit">LOGIN</h2>
+    <p class="login-txt">...</p>
+    <div class="login-form-box">
+        <form action="/login" method="POST">
+            <div class="login-area">
+                <div class="input-box"> 
+                    <input type="email" name="email" placeholder="E-MAIL"/>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" placeholder="PASS"/>
+                </div>
+                <div class="join"><a href="#">join</a></div>
+                <div class="btn-area">
+                    <button type="submit" class="btn-basic">Login</button>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div> -->
+<div class="login-content">
+    <div class="profile-sumnail">
+        <input type="file" />
+        <div class="image"></div>
+    </div>
+    <div class="login-form-box">
+        <form action="/login" method="POST">
+            <div class="login-area">
+                <div class="input-box"> 
+                    <input type="email" name="email" placeholder="E-MAIL"/>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" placeholder="PASS"/>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" placeholder="PASS"/>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" placeholder="PASS"/>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" placeholder="PASS"/>
+                </div>
+                <div class="check-agree">
+                    <input type="checkbox" id="check01"/>
+                    <label for="check01">
+                        개인정보 활용에 동의하시겠습니까?
+                    </label>
+                </div>
+
+                <div class="btn-area">
+                    <button type="submit" class="btn-basic">Join</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
