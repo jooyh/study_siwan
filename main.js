@@ -34,11 +34,13 @@ var app = http.createServer(function(request,response){
         request.on('end',function(){
             var temp = null;
             if(test){
-                console.log(test);
                 temp = qs.parse(test);
-                console.log('end',temp);
-                console.log('end',temp.email);
-            } 
+                console.log(temp);
+
+                fs.writeFile(`data/${temp.email.split("@")[0]}`,JSON.stringify(temp),"utf8",function(err){
+                    console.log(err);
+                });
+            }
         });
 
         fs.readFile(`./html/${pathname}.html`, 'utf8', function(err, content){
