@@ -12,7 +12,7 @@ a {text-decoration:none;color:#444;}
 .login-content .login-form-box {margin-top:35px;}
 .login-content .login-form-box .input-box {position:relative;width:100%;height:45px;margin-top:20px;}
 .login-content .login-form-box .input-box input {width:100%;height:100%;padding:0 15px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
-.login-content .login-form-box .input-box .btn-clear {display:none;position:absolute;top:0;right:0;width:45px;height:45px;background:url(../img/btn_input_clear.png) no-repeat center / 20px;font-size:0;}
+.login-content .login-form-box .input-box .btn-clear {display:none;position:absolute;top:0;right:0;width:45px;height:45px;background:url(/img/btn_input_clear.png) no-repeat center / 20px;font-size:0;}
 .login-content .login-form-box .join {margin-top:10px;text-align:right;}
 .login-content .login-form-box .join a {font-size:15px;color:#999;}
 
