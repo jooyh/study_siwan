@@ -70,28 +70,34 @@
 
 <script type="text/javascript">
     
+var inputBox = document.getElementsByClassName("input-box");
+var input;
+// input 감싸고있는 inputBox 반복문
+for (var i = 0; i < inputBox.length; i++) {
+    input = inputBox[i].getElementsByTagName("input")[0];
+    // input 입력시 이벤트
+    input.addEventListener('input', function(){
+        if(event.target.value) event.target.nextElementSibling.style.display = "block"; // input 버튼 노출
+        else event.target.nextElementSibling.style.display = "none"; // input 버튼 미노출
+    })
+    // input btn 클릭시 이벤트
+    inputBox[i].getElementsByClassName("btn-clear")[0].addEventListener("click",function(){
+        event.target.previousElementSibling.value = ""; // 입력창 지우기
+        event.target.style.display = "none"; // 버튼 미노출
+    })
+}
+
+/* 회원가입페이지 이동 함수 */
 function fn_moveJoinPage() {
     document.getElementById("logo-box").classList.add("h-animate");
     document.getElementById("login-box").style.display = "none";
     document.getElementById("join-box").style.display = "block";
 }
+/* 로그인페이지 이동 함수 */
 function fn_moveLoginPage() {
     document.getElementById("logo-box").classList.remove("h-animate");
     document.getElementById("login-box").style.display = "block";
     document.getElementById("join-box").style.display = "none";
-}
-
-
-var inputBox = document.getElementsByClassName("input-box");
-var input;
-for (var i = 0; i < inputBox.length; i++) {
-    input = inputBox[i].getElementsByTagName("input")[0];
-    input.addEventListener('input', function(){
-        if(event.target.value) {
-            event.target.nextElementSibling.style.display = "block";
-            
-        }
-    })
 }
 
 </script>
