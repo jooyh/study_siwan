@@ -1,7 +1,8 @@
-<div class="login-visual h-animate">
+<div id="logo-box" class="login-visual">
+    <button type="button" class="btn-back" onclick="fn_moveLoginPage()">뒤로가기</button>
     <div class="logo"></div>
 </div>
-<!-- <div class="login-content">
+<div id="login-box" class="login-content">
     <h2 class="login-tit">LOGIN</h2>
     <p class="login-txt">...</p>
     <div class="login-form-box">
@@ -13,15 +14,16 @@
                 <div class="input-box"> 
                     <input type="password" name="pw" placeholder="PASS"/>
                 </div>
-                <div class="join"><a href="#">join</a></div>
+                <div class="join"><a href="javascript:fn_moveJoinPage();">join</a></div>
                 <div class="btn-area">
                     <button type="submit" class="btn-basic">Login</button>
                 </div>
             </div>
         </form>
     </div>
-</div> -->
-<div class="login-content">
+</div>
+
+<div id="join-box" class="login-content" style="display:none;">
     <div class="profile-sumnail">
         <input type="file" />
         <div class="image"></div>
@@ -58,3 +60,20 @@
         </form>
     </div>
 </div>
+
+
+<script type="text/javascript">
+    
+function fn_moveJoinPage() {
+    document.getElementById("logo-box").classList.add("h-animate");
+    document.getElementById("login-box").style.display = "none";
+    document.getElementById("join-box").style.display = "block";
+}
+function fn_moveLoginPage() {
+    document.getElementById("logo-box").classList.remove("h-animate");
+    document.getElementById("login-box").style.display = "block";
+    document.getElementById("join-box").style.display = "none";
+}
+
+
+</script>
