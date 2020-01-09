@@ -1,21 +1,23 @@
-* {margin:0;padding:0;box-sizing:border-box;}
-a {text-decoration:none;color:#000;}
+@charset "utf-8";
+* {margin:0;padding:0;box-sizing:border-box;outline:none;color:#444;}
+a {text-decoration:none;color:#444;}
+::placeholder {color:#ccc;}
 /***  LOGIN  ***/
-.login-visual {width:100%;height:200px;background: #ccc;transition:height .5s;}
+.login-visual {width:100%;height:200px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);transition:height .5s;}
 .login-visual .btn-back {display:none;width:30px;height:30px;border:0;background:green;font-size:0;}
-.login-content {width:90%;margin:0 auto;}
-.login-content .login-tit {font-size:30px;font-weight:700;}
-.login-content .login-txt {font-size:20px;color:#ccc;}
 
-/* .login-content .login-form-box .login-area {margin:0 auto;} */
-.login-content .login-form-box .input-box {width:100%;height:45px;}
-.login-content .login-form-box .input-box input {width:100%;height:100%;padding:0 15px;border:1px solid #ccc;border-radius:25px;}
-.login-content .login-form-box .input-box + .input-box {margin-top:20px;}
-.join {margin-top:10px;text-align:right;}
-.join a {color:#777;}
+.login-content {width:90%;margin:0 auto;}
+.login-content .login-tit {margin-top:10px;font-size:60px;font-weight:700;}
+.login-content .login-txt {font-size:15px;color:#999;}
+.login-content .login-form-box {margin-top:35px;}
+.login-content .login-form-box .input-box {position:relative;width:100%;height:45px;margin-top:20px;}
+.login-content .login-form-box .input-box input {width:100%;height:100%;padding:0 15px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
+.login-content .login-form-box .input-box .btn-clear {display:none;position:absolute;top:0;right:0;width:45px;height:45px;background:url(../img/btn_input_clear.png) no-repeat center / 20px;font-size:0;}
+.login-content .login-form-box .join {margin-top:10px;text-align:right;}
+.login-content .login-form-box .join a {font-size:15px;color:#999;}
 
 .btn-area {text-align:center;margin-top:50px;}
-.btn-area .btn-basic {min-width:100px;padding:10px;border:none;border-radius:30px;background:#ccc;}
+.btn-area .btn-basic {min-width:150px;padding:12px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:15px;font-weight:700;color:#fff;letter-spacing:2px;}
 
 /* join */
 .login-visual.h-animate {height:150px;}
@@ -23,7 +25,6 @@ a {text-decoration:none;color:#000;}
 .profile-sumnail {position:relative;width:100px;height:100px;margin:0 auto;margin-top:-50px;background:#333;border-radius:50%;}
 .profile-sumnail:after {content:'';position:absolute;right:5px;bottom:0;width:20px;height:20px;background:#000;border-radius:50%;}
 .profile-sumnail input[type="file"] {width:100%;height:100%;opacity:0;}
-.profile-sumnail + .login-form-box {margin-top:20px;}
 
 .check-agree {margin-top:10px;}
 .check-agree input[type="checkbox"] {display:none;}
