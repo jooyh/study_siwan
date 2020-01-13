@@ -17,6 +17,16 @@ app.get('/main', function(req, res){
         res.send(template.getHtml(content));
     });
 });
+app.get('/timeline', function(req, res){
+    fs.readFile(`./html/timeline.html`, 'utf8', function(err, content){
+        res.send(template.getHtml(content));
+    });
+});
+app.get('/userpage', function(req, res){
+    fs.readFile(`./html/userpage.html`, 'utf8', function(err, content){
+        res.send(template.getHtml(content));
+    });
+});
 
 app.post('/idcheck.do',function(req,res){
     console.log("reqData",req.body);
