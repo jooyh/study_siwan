@@ -31,26 +31,30 @@
         <div class="image"></div>
     </div>
     <div class="login-form-box">
-        <form action="/login" method="POST">
+        <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
                 <div class="input-box"> 
-                    <input type="email" name="email" placeholder="E-MAIL"/>
+                    <input type="email" name="email" id ="reg-email" placeholder="E-MAIL"/>
+                    <button type="button" class="btn-clear">입력글 지우기</button>
+                </div>
+                <div class="btn-area02">
+                    <button type="button" class="btn-basic" onclick = "fn_check()">중복확인</button>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" id ="reg-pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="password" name="re_pw" id ="reg-re-pw" placeholder="PASS"/>
+                    <button type="button" class="btn-clear">입력글 지우기</button>
+                </div>
+                <!-- <p id="pw-notice">비밀번호가 일치하지 않습니다.</p> -->
+                <div class="input-box"> 
+                    <input type="text" name="name" placeholder="NAME"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
-                    <button type="button" class="btn-clear">입력글 지우기</button>
-                </div>
-                <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
-                    <button type="button" class="btn-clear">입력글 지우기</button>
-                </div>
-                <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="text" name="addr" placeholder="ADDRESS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="check-agree">
@@ -60,10 +64,10 @@
                     </label>
                 </div>
                 <div class="btn-area">
-                    <button type="submit" class="btn-basic">Join</button>
+                    <button type="submit" class="btn-basic" onclick="fn_join()">Join</button>
                 </div>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
 </div>
 
@@ -99,5 +103,110 @@ function fn_moveLoginPage() {
     document.getElementById("login-box").style.display = "block";
     document.getElementById("join-box").style.display = "none";
 }
+
+
+var inputBox = document.getElementsByClassName("input-box");
+var input;
+for (var i = 0; i < inputBox.length; i++) {
+    input = inputBox[i].getElementsByTagName("input")[0];
+    input.addEventListener('input', function(){
+        if(event.target.value) {
+            event.target.nextElementSibling.style.display = "block";
+        }
+    })
+}
+
+function fn_check() {
+    var input = document.getElementById("reg-email");
+    var data = {};
+    data.email = input.value;
+    $.ajax({
+        url : '/idcheck.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify(data)
+        ,success : function(result){
+            console.log(result);
+            if(result) alert("중복된 이메일 입니다.");
+        }
+        ,error : function(e){
+            alert("시스템 오류가 발생했습니다.");
+        }
+    });
+}
+
+function fn_join() {
+    var pwVal = document.getElementById("reg-pw").value;
+    var rePwVal = document.getElementById("reg-re-pw").value;
+    var userInfo = {};
+    userInfo.email = document.getElementById("reg-email").value;
+    userInfo.pw = rePwVal;
+    userInfo.name = document.getElementsByName("name")[0].value;
+    userInfo.addr = document.getElementsByName("addr")[0].value;
+    console.log('userInfo: ', userInfo);
+    if(pwVal != rePwVal) {
+        alert("비밀번호가 일치하지않습니다.");
+        return;
+    }
+
+    $.ajax({
+        url : '/join.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify(userInfo)
+        ,success : function(result){
+            console.log(result);
+            if(result.code == "SUCC") {
+                alert("회원가입이 완료되었습니다.");
+                fn_moveLoginPage();
+            } else {
+                alert("회원가입 중 오류가 발생하였습니다.");
+            }
+        }
+        ,error : function(e){
+            alert("시스템 오류가 발생했습니다.");
+        }
+    });
+}
+
+
+
+
+
+// function test(){
+//     $.ajax({
+//         url : '/idcheck.do'
+//         ,type:'post'
+//         ,contentType: 'application/json'
+//         ,data : JSON.stringify({email:'aguitarj@naver.com'})
+//         ,success : function(result){
+//             console.log(result)
+//         }
+//         ,error : function(e){
+    
+//         }
+//     });
+// }
+
+// function test2(){
+//     var userInfo = {
+//         email : "aguitarj@naver.com"
+//         ,pw : 123123
+//         ,name : '주영현'
+//         ,addr : '서울시 중랑구 중화동'
+//     }
+//     $.ajax({
+//         url : '/join.do'
+//         ,type:'post'
+//         ,contentType: 'application/json'
+//         ,data : JSON.stringify(userInfo)
+//         ,success : function(result){
+//             console.log(result)
+//         }
+//         ,error : function(e){
+    
+//         }
+//     });
+// }
 
 </script>
