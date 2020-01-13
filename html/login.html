@@ -123,10 +123,11 @@ function fn_login () {
     loginData.email = emailVal;
     loginData.pw = pwVal;
     $.ajax({
-        url : '/loginin.do'
+        url : '/account/login.do'
         ,type:'post'
-        ,contentType: 'application/json'
-        ,data : JSON.stringify(loginData)
+        // ,contentType: 'application/json'
+        // ,data : JSON.stringify(loginData)
+        ,data : loginData
         ,success : function(result){
             console.log(result);
             if(result.code == "SUCC") {
@@ -150,10 +151,11 @@ function fn_check() {
     var data = {};
     data.email = input.value;
     $.ajax({
-        url : '/idcheck.do'
+        url : '/account/idcheck.do'
         ,type:'post'
-        ,contentType: 'application/json'
-        ,data : JSON.stringify(data)
+        // ,contentType: 'application/json'
+        // ,data : JSON.stringify(data)
+        ,data : data
         ,success : function(result){
             console.log(result);
             if(result) alert("중복된 이메일 입니다.");
@@ -179,10 +181,11 @@ function fn_join() {
     }
 
     $.ajax({
-        url : '/join.do'
+        url : '/account/join.do'
         ,type:'post'
-        ,contentType: 'application/json'
-        ,data : JSON.stringify(userInfo)
+        // ,contentType: 'application/json'
+        // ,data : JSON.stringify(userInfo)
+        ,data : userInfo
         ,success : function(result){
             console.log(result);
             if(result.code == "SUCC") {

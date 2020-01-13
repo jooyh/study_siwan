@@ -87,7 +87,7 @@ getPostList();
 
 function getPostList(){
     $.ajax({
-        url : '/getpostlist.do'
+        url : '/post/getpostlist.do'
         ,type:'post'
         ,contentType: 'application/json'
         ,data : JSON.stringify({})
@@ -181,7 +181,7 @@ function upLodePost() {
     post.writer = "admin@admin.com"
 
     $.ajax({
-        url : '/uploadpost.do'
+        url : '/post/uploadpost.do'
         ,type:'post'
         // ,contentType: 'application/json'
         ,data : post
