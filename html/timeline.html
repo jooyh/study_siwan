@@ -5,7 +5,7 @@
 </div>
 <div class="tl-item-wrapper">
     
-    <div class="tl-item-wrap">
+    <!-- <div class="tl-item-wrap">
         <div class="tl-item-box">
             <div class="tl-top">
                 <a href="#">
@@ -23,7 +23,7 @@
                     <i class="icon-good"></i>
                     <i class="icon-comment"></i>
                 </div>
-                <!-- <p class="info-txt"><strong>개볶치</strong>님이 좋아합니다.</p> -->
+                <p class="info-txt"><strong>개볶치</strong>님이 좋아합니다.</p>
                 <p class="info-txt"><strong>개볶치</strong>님 외 <strong><span>5<span>명</strong>이 좋아합니다.</p>
                 <div class="info-writing-box">
                     <strong>yougmi</strong>
@@ -38,43 +38,59 @@
                 </div>
             </div>
         </div>
-        <div class="tl-item-box">
-            <div class="tl-top">
-                <a href="#">
-                    <div class="user-profile-img">
-                        <img alt="-"/>
-                    </div>
-                    <p class="user-info">yougmi</p>
-                </a>
-            </div>
-            <div class="tl-center">
-                <img alt="-"/>
-            </div>
-            <div class="tl-bottom">
-                <div class="icon-box">
-                    <i class="icon-good"></i>
-                    <i class="icon-comment"></i>
-                </div>
-                <!-- <p class="info-txt"><strong>개볶치</strong>님이 좋아합니다.</p> -->
-                <p class="info-txt"><strong>개볶치</strong>님 외 <strong><span>5<span>명</strong>이 좋아합니다.</p>
-                <div class="info-writing-box">
-                    <strong>yougmi</strong>
-                    <p class="info-txt">귀염뽀짝 트윈룩 코디 멜빵바지</p>
-                    <button type="button" class="btn-more">더보기</button>
-                </div>
-                <div class="user-comment-inputbox">
-                    <div class="profile-img">
-                        <img alt="-" />
-                    </div>
-                    <input type="text" placeholder="댓글달기..."/>
-                </div>
-            </div>
-        </div>
-    </div>
+    </div> -->
 
 </div>
 
+
+<div class="bottom-menu">
+    <button type="button" class="btn-post">
+        글쓰기    
+    </button>
+</div>
+
+
+
+<div id="post_popup" class="pop-wrapper" style="display:none">
+    <div class="pop-wrap">
+        <div class="pop-header">
+            <h2 class="tit">새 게시물</h2>
+            <button type="button" class="btn-close">닫기</button>
+        </div>
+        <div class="pop-content">
+            <div class="post-write-area">
+                <div class="photo-box">
+                    <input type="file"/>
+                    <div class="image"></div>
+                </div>
+                <div class="photo-box">
+                    <input type="file"/>
+                    <div class="image"></div>
+                </div>
+                <div class="photo-box">
+                    <input type="file"/>
+                    <div class="image"></div>
+                </div>
+                <button type="button" class="btn-add">추가하기</button>
+            </div>
+            <div class="textarea-box">
+                <textarea class="textarea-basic" placeholder="문구입력..."></textarea>
+            </div>
+
+            <div class="btn-area">
+                <button type="submit" class="btn-basic" onclick="upLodePost()">등록</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+document.getElementsByClassName("btn-post")[0].addEventListener("click", function(){
+    document.getElementById("post_popup").style.display = "block";
+})
+
+
+getPostList();
 
 function getPostList(){
     $.ajax({
@@ -84,6 +100,7 @@ function getPostList(){
         ,data : JSON.stringify({})
         ,success : function(result){
             console.log(result);
+            mkList(result)
         }
         ,error : function(e){
             alert("시스템 오류가 발생했습니다.");
@@ -91,9 +108,70 @@ function getPostList(){
     });
 }
 
+function mkList(list) {
+    html = ``;
+    for (var i in list) {
+        html += `
+            <div class="tl-item-wrap">
+                <div class="tl-item-box">
+                    <div class="tl-top">
+                        <a href="#">
+                            <div class="user-profile-img">
+                                <img src ="/img/img_user.png" alt="유그미프로필사진"/>
+                            </div>
+                            <p class="user-info">${list[i].writer}</p>
+                        </a>
+                    </div>
+                    <div class="tl-center">
+                        <img alt="-"/>
+                    </div>
+                    <div class="tl-bottom">
+                        <div class="icon-box">
+                            <i class="icon-good"></i>
+                            <i class="icon-comment"></i>
+                        </div>
+                        <div class="info-writing-box">
+                            <strong>${list[i].writer}</strong>
+                            <p class="info-txt">${list[i].content}</p>
+                            <button type="button" class="btn-more">더보기</button>
+                        </div>
+                        <div class="user-comment-inputbox">
+                            <div class="profile-img">
+                                <img alt="-" />
+                            </div>
+                            <input type="text" placeholder="댓글달기..."/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    document.getElementsByClassName("tl-item-wrapper")[0].innerHTML = html;
+
+    var textBox = document.getElementsByClassName("info-writing-box");
+    var btnMore = document.getElementsByClassName("btn-more");
+    $(".info-writing-box .info-txt").each(function(){
+        if($(this).height() > 40) {
+            $(this).css({
+                height:"38px",
+                overflow:"hidden",
+                textOverflow: "ellipsis",
+            })
+            $(this).next(".btn-more").css("display","block");
+        }
+    })
+    $(".btn-more").on("click",function(){
+        $(this).prev(".info-txt").css({
+            height:"auto"
+        })
+        $(this).hide();
+    })
+}
+
 function upLodePost() {
+    var contents = document.getElementsByClassName("textarea-basic")[0].value;
     var post = {};
-    post.content = "테스트 컨텐츠 입니다." 
+    post.content = contents;
     post.writer = "admin@admin.com"
 
     $.ajax({
@@ -103,6 +181,11 @@ function upLodePost() {
         ,data : post
         ,success : function(result){
             console.log(result);
+            if(result.code == "SUCC") {
+                alert("등록되었습니다.");
+                // document.getElementById("post_popup").style.display = "none";
+                location.reload();
+            }
         }
         ,error : function(e){
             alert("시스템 오류가 발생했습니다.");
