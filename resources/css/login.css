@@ -15,7 +15,7 @@
 .login-content .login-form-box .join a {font-size:15px;color:#999;}
 
 .btn-area {text-align:center;margin-top:50px;}
-.btn-area .btn-basic {min-width:150px;padding:12px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:15px;font-weight:700;color:#fff;letter-spacing:2px;}
+.btn-area .btn-basic {min-width:150px;padding:12px;border:none;border-radius:30px;/*background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);*/background:#A056EB;font-size:15px;font-weight:700;color:#fff;letter-spacing:2px;}
 
 /***  JOIN  ***/
 .login-visual.h-animate {height:120px;}

@@ -63,23 +63,16 @@
                     <input type="file"/>
                     <div class="image"></div>
                 </div>
-                <div class="photo-box">
-                    <input type="file"/>
-                    <div class="image"></div>
-                </div>
-                <div class="photo-box">
-                    <input type="file"/>
-                    <div class="image"></div>
-                </div>
+            </div>
+            <div class="btn-sub-area">
                 <button type="button" class="btn-add">추가하기</button>
             </div>
             <div class="textarea-box">
                 <textarea class="textarea-basic" placeholder="문구입력..."></textarea>
             </div>
-
-            <div class="btn-area">
-                <button type="submit" class="btn-basic" onclick="upLodePost()">등록</button>
-            </div>
+        </div>
+        <div class="btn-area">
+            <button type="submit" class="btn-basic" onclick="upLodePost()">등록</button>
         </div>
     </div>
 </div>
@@ -157,7 +150,7 @@ function mkList(list) {
                 overflow:"hidden",
                 textOverflow: "ellipsis",
             })
-            $(this).next(".btn-more").css("display","block");
+            $(this).next(".btn-more").show();
         }
     })
     $(".btn-more").on("click",function(){
@@ -165,6 +158,19 @@ function mkList(list) {
             height:"auto"
         })
         $(this).hide();
+    })
+    $(".btn-close").on("click",function(){
+        $(this).parents(".pop-wrapper").hide();
+    });
+    $(".btn-add").on("click",function(){
+        var html = ``;
+        html += `
+            <div class="photo-box">
+                <input type="file"/>
+                <div class="image"></div>
+            </div>
+        `
+        $(this).parent(".btn-sub-area").prev(".post-write-area").append(html);
     })
 }
 
