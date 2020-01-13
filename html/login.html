@@ -42,15 +42,15 @@
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="password" name="re_pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="name" name="pw" placeholder="NAME"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="password" name="addr" placeholder="ADDRESS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="check-agree">
@@ -92,6 +92,42 @@ for (var i = 0; i < inputBox.length; i++) {
             
         }
     })
+}
+
+function test(){
+    $.ajax({
+        url : '/idcheck.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify({email:'aguitarj@naver.com' , pw : 123123123})
+        ,success : function(result){
+            console.log(result)
+        }
+        ,error : function(e){
+    
+        }
+    });
+}
+
+function test2(){
+    var userInfo = {
+        email : "aguitarj@naver.com"
+        ,pw : 123123
+        ,name : '주영현'
+        ,addr : '서울시 중랑구 중화동'
+    }
+    $.ajax({
+        url : '/join.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify(userInfo)
+        ,success : function(result){
+            console.log(result)
+        }
+        ,error : function(e){
+    
+        }
+    });
 }
 
 </script>
