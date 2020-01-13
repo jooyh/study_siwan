@@ -73,3 +73,36 @@
     </div>
 
 </div>
+
+<script>
+
+function getPostList(){
+    $.ajax({
+        url : '/getpostlist.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify({})
+        ,success : function(result){
+            console.log(result);
+        }
+        ,error : function(e){
+            alert("시스템 오류가 발생했습니다.");
+        }
+    });
+}
+
+function upLodePost() {
+    $.ajax({
+        url : '/uploadpost.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify({})
+        ,success : function(result){
+            console.log(result);
+        }
+        ,error : function(e){
+            alert("시스템 오류가 발생했습니다.");
+        }
+    });
+}
+</script>
