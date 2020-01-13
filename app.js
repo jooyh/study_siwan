@@ -76,4 +76,32 @@ app.post('/getUserList.do',function(req,res){
     });
 });
 
+app.post('/loginin.do',function(req,res){
+    console.log("reqData",req.body);
+    var userList;
+    fs.readFile(`./data/userInfo.json`, 'utf8', function(err, content){
+        console.log('content',content);
+        if(!content){
+            userList = [];
+        }else{
+            userList = JSON.parse(content);
+        }
+
+        var reqEmail = req.body.email;
+        var reqPw = req.body.pw;
+        var isResult = {code:'EMAIL_ERR'};
+        for(var i in userList){
+            if(userList[i].email == reqEmail && userList[i].pw == reqPw){
+                isResult = {code:'SUCC'};
+                break;
+            }else if(userList[i].email == reqEmail && userList[i].pw != reqPw){
+                isResult = {code:'PW_ERR'};
+                break;
+            }
+        }
+        console.log(isResult);
+        res.send(isResult);
+    });
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -130,4 +130,24 @@ function test2(){
     });
 }
 
+function test3(){
+    var userInfo = {
+        email : "aguitarj@naver.com"
+        ,pw : 123123
+    }
+    console.log(userInfo);
+    $.ajax({
+        url : '/loginin.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify(userInfo)
+        ,success : function(result){
+            console.log("res",result)
+        }
+        ,error : function(e){
+    
+        }
+    });
+}
+
 </script>
