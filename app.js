@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
-app.use(express.json())
 const port = 3000;
 const fs = require('fs');
 const template = require('./lib/common/template.js');
 
+app.use(express.urlencoded({extended:false}));
 app.use(express.static('resources'));
+app.post("*",function(req,res,next){
+    req.reqTime = new Date();
+    next();
+});
 
 app.get('/', function(req, res){
     fs.readFile(`./html/login.html`, 'utf8', function(err, content){
@@ -111,6 +115,43 @@ app.post('/loginin.do',function(req,res){
         }
         console.log(isResult);
         res.send(isResult);
+    });
+
+
+    app.post('/uploadpost.do',function(req,res){
+        var randomIdx = Math.random() * (1000 - 0) + 0;
+        var postIdx = req.reqTime.getTime()+"_"+randomIdx;
+        req.body.postIdx = postIdx;
+
+        fs.readFile(`./data/post.json`, 'utf8', function(err, content){
+            var postList;
+            if(!content){
+                postList = [];
+            }else{
+                postList = JSON.parse(content);
+            }
+            postList.push(req.body.postIdx);
+
+            fs.writeFile(`./data/post.json`, JSON.stringify(postList), 'utf8', function(err){
+                if(!err){
+                    res.send({code:'SUCC'});
+                }else{
+                    res.send({code:'ERR'});
+                }
+            });
+        });
+    });
+
+    app.post('/getpostlist.do',function(req,res){
+        fs.readFile(`./data/post.json`, 'utf8', function(err, content){
+            var postList;
+            if(!content){
+                postList = [];
+            }else{
+                postList = JSON.parse(content);
+            }
+            res.send(postList);
+        });
     });
 });
 
