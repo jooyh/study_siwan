@@ -130,7 +130,8 @@ function fn_login () {
         ,success : function(result){
             console.log(result);
             if(result.code == "SUCC") {
-                alert("로그인 하였습니다.")
+                alert("로그인 하였습니다.");
+                location.href='/timeline'
             } else if (result.code == "EMAIL_ERR"){
                 alert("없는 이메일 입니다.");
             } else if (result.code == "PW_ERR") {
