@@ -25,9 +25,24 @@ strong {font-weight:700;}
 .tl-item-wrapper .tl-item-box .tl-bottom .icon-box i {display:inline-block;width:40px;height:40px;border:1px solid #ccc;}
 .tl-item-wrapper .tl-item-box .tl-bottom .info-txt {font-size:14px;margin-top:5px;}
 .tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box {font-size:13px;}
-.tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box .info-txt {display:inline-block;}
-.tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box .btn-more {border:none;background:transparent;color:#aaa;font-size:12px;text-decoration:underline;}
+.tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box .info-txt {display:inline-block;transition:all 2s;}
+.tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box .btn-more {display:none;border:none;background:transparent;color:#aaa;font-size:12px;text-decoration:underline;}
 .tl-item-wrapper .tl-item-box .tl-bottom .user-comment-inputbox {position:relative;height:30px;margin-top:15px;}
 .tl-item-wrapper .tl-item-box .tl-bottom .user-comment-inputbox .profile-img {position:absolute;top:3px;left:0;width:25px;height:25px;border-radius:50%;background:#ccc;}
 .tl-item-wrapper .tl-item-box .tl-bottom .user-comment-inputbox .profile-img img {display:inline-block;width:100%;height:100%;}
 .tl-item-wrapper .tl-item-box .tl-bottom .user-comment-inputbox input {width:100%;height:100%;border:none;text-indent:40px;}
+
+
+/*** POPUP ***/
+.pop-wrapper {position:fixed;top:0;right:0;bottom:0;left:0;z-index:10000;background:#fff;}
+.pop-wrapper .pop-header {width:100%;height:50px;padding:0 15px;background:#eee;}
+.pop-wrapper .pop-header .tit {font-size:18px;line-height:50px;;}
+.pop-wrapper .pop-header .btn-close {position:absolute;top:0;right:0;width:50px;height:50px;border:none;background:url(/img/btn_close.png) no-repeat center / 25px;font-size:0;}
+.pop-wrapper .pop-content {padding:15px;}
+
+.post-write-area:after {content:'';display:block;clear:both;}
+.photo-box {float:left; position:relative;width:calc((100% / 3) - 7px);height:100px;margin-right:10px;border:1px solid #aaa;border-radius:10px;background:url(/img/icon_plus.png) no-repeat center / 20px;}
+.photo-box:nth-child(3) {margin-right:0;}
+.photo-box input[type="file"] {position:absolute;top:0;right:0;bottom:0;left:0;width:100%;opacity:0;z-index:5;}
+.photo-box .image {position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;}
+.textarea-box .textarea-basic {width:100%;height:150px;margin-top:20px;resize:none;}
