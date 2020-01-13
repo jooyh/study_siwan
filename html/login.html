@@ -6,22 +6,22 @@
     <h2 class="login-tit">Hello</h2>
     <p class="login-txt">Sign in your accaunt</p>
     <div class="login-form-box">
-        <form action="/login" method="POST">
+        <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
                 <div class="input-box"> 
-                    <input type="email" name="email" placeholder="E-MAIL"/>
+                    <input type="email" name="email" id="login_email" placeholder="E-MAIL"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="password" name="pw" id="login_pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="join"><a href="javascript:fn_moveJoinPage();">join</a></div>
                 <div class="btn-area">
-                    <button type="submit" class="btn-basic">Login</button>
+                    <button type="submit" class="btn-basic" onclick="fn_login()">Login</button>
                 </div>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
 </div>
 
@@ -115,6 +115,35 @@ for (var i = 0; i < inputBox.length; i++) {
         }
     })
 }
+
+function fn_login () {
+    var emailVal = document.getElementById("login_email").value;
+    var pwVal = document.getElementById("login_pw").value;
+    var loginData = {};
+    loginData.email = emailVal;
+    loginData.pw = pwVal;
+    $.ajax({
+        url : '/loginin.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify(loginData)
+        ,success : function(result){
+            console.log(result);
+            if(result.code == "SUCC") {
+                alert("로그인 하였습니다.")
+            } else if (result.code == "EMAIL_ERR"){
+                alert("없는 이메일 입니다.");
+            } else if (result.code == "PW_ERR") {
+                alert("비밀번호가 틀렸습니다.")
+            }
+        }
+        ,error : function(e){
+
+        }
+    });
+
+}
+
 
 function fn_check() {
     var input = document.getElementById("reg-email");
