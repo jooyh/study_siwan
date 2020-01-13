@@ -63,4 +63,17 @@ app.post('/join.do',function(req,res){
     });
 });
 
+app.post('/getUserList.do',function(req,res){
+    fs.readFile(`./data/userInfo.json`, 'utf8', function(err, content){
+        var userList;
+        if(!content){
+            userList = [];
+        }else{
+            userList = JSON.parse(content);
+        }
+        userList.push(req.body);
+        res.send(userList);
+    });
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
