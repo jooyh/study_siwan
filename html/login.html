@@ -6,22 +6,22 @@
     <h2 class="login-tit">Hello</h2>
     <p class="login-txt">Sign in your accaunt</p>
     <div class="login-form-box">
-        <form action="/login" method="POST">
+        <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
                 <div class="input-box"> 
-                    <input type="email" name="email" placeholder="E-MAIL"/>
+                    <input type="email" name="email" id="login_email" placeholder="E-MAIL"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="password" name="pw" id="login_pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="join"><a href="javascript:fn_moveJoinPage();">join</a></div>
                 <div class="btn-area">
-                    <button type="submit" class="btn-basic">Login</button>
+                    <button type="submit" class="btn-basic" onclick="fn_login()">Login</button>
                 </div>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
 </div>
 
@@ -31,26 +31,30 @@
         <div class="image"></div>
     </div>
     <div class="login-form-box">
-        <form action="/login" method="POST">
+        <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
                 <div class="input-box"> 
-                    <input type="email" name="email" placeholder="E-MAIL"/>
+                    <input type="email" name="email" id ="reg-email" placeholder="E-MAIL"/>
+                    <button type="button" class="btn-clear">입력글 지우기</button>
+                </div>
+                <div class="btn-area02">
+                    <button type="button" class="btn-basic" onclick = "fn_check()">중복확인</button>
+                </div>
+                <div class="input-box"> 
+                    <input type="password" name="pw" id ="reg-pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="pw" placeholder="PASS"/>
+                    <input type="password" name="re_pw" id ="reg-re-pw" placeholder="PASS"/>
+                    <button type="button" class="btn-clear">입력글 지우기</button>
+                </div>
+                <!-- <p id="pw-notice">비밀번호가 일치하지 않습니다.</p> -->
+                <div class="input-box"> 
+                    <input type="text" name="name" placeholder="NAME"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="re_pw" placeholder="PASS"/>
-                    <button type="button" class="btn-clear">입력글 지우기</button>
-                </div>
-                <div class="input-box"> 
-                    <input type="name" name="pw" placeholder="NAME"/>
-                    <button type="button" class="btn-clear">입력글 지우기</button>
-                </div>
-                <div class="input-box"> 
-                    <input type="password" name="addr" placeholder="ADDRESS"/>
+                    <input type="text" name="addr" placeholder="ADDRESS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="check-agree">
@@ -60,21 +64,40 @@
                     </label>
                 </div>
                 <div class="btn-area">
-                    <button type="submit" class="btn-basic">Join</button>
+                    <button type="submit" class="btn-basic" onclick="fn_join()">Join</button>
                 </div>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
 </div>
 
 
 <script type="text/javascript">
     
+var inputBox = document.getElementsByClassName("input-box");
+var input;
+// input 감싸고있는 inputBox 반복문
+for (var i = 0; i < inputBox.length; i++) {
+    input = inputBox[i].getElementsByTagName("input")[0];
+    // input 입력시 이벤트
+    input.addEventListener('input', function(){
+        if(event.target.value) event.target.nextElementSibling.style.display = "block"; // input 버튼 노출
+        else event.target.nextElementSibling.style.display = "none"; // input 버튼 미노출
+    })
+    // input btn 클릭시 이벤트
+    inputBox[i].getElementsByClassName("btn-clear")[0].addEventListener("click",function(){
+        event.target.previousElementSibling.value = ""; // 입력창 지우기
+        event.target.style.display = "none"; // 버튼 미노출
+    })
+}
+
+/* 회원가입페이지 이동 함수 */
 function fn_moveJoinPage() {
     document.getElementById("logo-box").classList.add("h-animate");
     document.getElementById("login-box").style.display = "none";
     document.getElementById("join-box").style.display = "block";
 }
+/* 로그인페이지 이동 함수 */
 function fn_moveLoginPage() {
     document.getElementById("logo-box").classList.remove("h-animate");
     document.getElementById("login-box").style.display = "block";
@@ -89,65 +112,130 @@ for (var i = 0; i < inputBox.length; i++) {
     input.addEventListener('input', function(){
         if(event.target.value) {
             event.target.nextElementSibling.style.display = "block";
-            
         }
     })
 }
 
-function test(){
+function fn_login () {
+    var emailVal = document.getElementById("login_email").value;
+    var pwVal = document.getElementById("login_pw").value;
+    var loginData = {};
+    loginData.email = emailVal;
+    loginData.pw = pwVal;
+    $.ajax({
+        url : '/loginin.do'
+        ,type:'post'
+        ,contentType: 'application/json'
+        ,data : JSON.stringify(loginData)
+        ,success : function(result){
+            console.log(result);
+            if(result.code == "SUCC") {
+                alert("로그인 하였습니다.");
+                location.href='/timeline'
+            } else if (result.code == "EMAIL_ERR"){
+                alert("없는 이메일 입니다.");
+            } else if (result.code == "PW_ERR") {
+                alert("비밀번호가 틀렸습니다.")
+            }
+        }
+        ,error : function(e){
+
+        }
+    });
+
+}
+
+function fn_check() {
+    var input = document.getElementById("reg-email");
+    var data = {};
+    data.email = input.value;
     $.ajax({
         url : '/idcheck.do'
         ,type:'post'
         ,contentType: 'application/json'
-        ,data : JSON.stringify({email:'aguitarj@naver.com' , pw : 123123123})
+        ,data : JSON.stringify(data)
         ,success : function(result){
-            console.log(result)
+            console.log(result);
+            if(result) alert("중복된 이메일 입니다.");
         }
         ,error : function(e){
-    
+            alert("시스템 오류가 발생했습니다.");
         }
     });
 }
 
-function test2(){
-    var userInfo = {
-        email : "aguitarj@naver.com"
-        ,pw : 123123
-        ,name : '주영현'
-        ,addr : '서울시 중랑구 중화동'
+function fn_join() {
+    var pwVal = document.getElementById("reg-pw").value;
+    var rePwVal = document.getElementById("reg-re-pw").value;
+    var userInfo = {};
+    userInfo.email = document.getElementById("reg-email").value;
+    userInfo.pw = rePwVal;
+    userInfo.name = document.getElementsByName("name")[0].value;
+    userInfo.addr = document.getElementsByName("addr")[0].value;
+    console.log('userInfo: ', userInfo);
+    if(pwVal != rePwVal) {
+        alert("비밀번호가 일치하지않습니다.");
+        return;
     }
+
     $.ajax({
         url : '/join.do'
         ,type:'post'
         ,contentType: 'application/json'
         ,data : JSON.stringify(userInfo)
         ,success : function(result){
-            console.log(result)
+            console.log(result);
+            if(result.code == "SUCC") {
+                alert("회원가입이 완료되었습니다.");
+                fn_moveLoginPage();
+            } else {
+                alert("회원가입 중 오류가 발생하였습니다.");
+            }
         }
         ,error : function(e){
-    
+            alert("시스템 오류가 발생했습니다.");
         }
     });
 }
 
-function test3(){
-    var userInfo = {
-        email : "aguitarj@naver.com"
-        ,pw : 123123
-    }
-    console.log(userInfo);
-    $.ajax({
-        url : '/loginin.do'
-        ,type:'post'
-        ,contentType: 'application/json'
-        ,data : JSON.stringify(userInfo)
-        ,success : function(result){
-            console.log("res",result)
-        }
-        ,error : function(e){
+
+
+
+
+// function test(){
+//     $.ajax({
+//         url : '/idcheck.do'
+//         ,type:'post'
+//         ,contentType: 'application/json'
+//         ,data : JSON.stringify({email:'aguitarj@naver.com'})
+//         ,success : function(result){
+//             console.log(result)
+//         }
+//         ,error : function(e){
     
-        }
-    });
-}
+//         }
+//     });
+// }
+
+// function test2(){
+//     var userInfo = {
+//         email : "aguitarj@naver.com"
+//         ,pw : 123123
+//         ,name : '주영현'
+//         ,addr : '서울시 중랑구 중화동'
+//     }
+//     $.ajax({
+//         url : '/join.do'
+//         ,type:'post'
+//         ,contentType: 'application/json'
+//         ,data : JSON.stringify(userInfo)
+//         ,success : function(result){
+//             console.log(result)
+//         }
+//         ,error : function(e){
+    
+//         }
+//     });
+// }
 
 </script>
