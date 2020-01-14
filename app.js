@@ -6,6 +6,7 @@ const indexRouter   = require('./routes/index.js');
 const accountRouter = require('./routes/account.js');
 const postRouter    = require('./routes/post.js');
 
+
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('resources'));
 app.post("*",function(req,res,next){
@@ -18,6 +19,9 @@ app.use('/account',accountRouter);
 app.use('/post'   ,postRouter);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+
+/*************************************************************************************** */
 
 Date.prototype.format = function(f) {
 	if (!this.valueOf()) return " ";
