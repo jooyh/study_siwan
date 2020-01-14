@@ -1,7 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const multiparty = require('multiparty');
+const multer = require('multer');
+const path = require("path");
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './resources/upload/')
+    },
+    filename: function (req, file, cb) {
+        var extension = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + Date.now() + extension)
+    }
+});
+
+const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 router.post('/uploadpost.do',function(req,res){
     var randomIdx = Math.round(Math.random() * (1000 - 0) + 0);
@@ -50,52 +63,9 @@ router.post('/getpostlist.do',function(req,res){
     });
 });
 
-router.post('/test.do',function(req,res){
-    console.log(req.body);
-
-    var form = new multiparty.Form();
-    // get field name & value
-    form.on('field',function(name,value){
-        console.log('normal field / name = '+name+' , value = '+value);
-    }); 
-  
-   // file upload handling
-//    form.on('part',function(part){
-//         var filename,size;
-//         if (part.filename) {
-//               filename = part.filename;
-//               size = part.byteCount;
-//         }else{
-//               part.resume();
-//         }    
-
-//         console.log("Write Streaming file :"+filename);
-
-//         var writeStream = fs.createWriteStream('/tmp/'+filename);
-//         writeStream.filename = filename;
-//         part.pipe(writeStream);
-
-//         part.on('data',function(chunk){
-//               console.log(filename+' read '+chunk.length + 'bytes');
-//         });
-//         part.on('end',function(){
-//               console.log(filename+' Part read complete');
-//               writeStream.end();
-//         });
-
-//    });
-
-//    // all uploads are completed
-//    form.on('close',function(){
-//         res.status(200).send('Upload complete');
-//    });
-
-//    // track progress
-//    form.on('progress',function(byteRead,byteExpected){
-//         console.log(' Reading total  '+byteRead+'/'+byteExpected);
-//    });
-//    form.parse(req);
-    res.send(req.body);
+router.post('/test.do',upload.array("atchFile"),function(req,res){
+    console.log(req.files);
+    res.send(req.files); 
 });
 
 module.exports = router;
