@@ -5,8 +5,11 @@ const port = 3000;
 const indexRouter   = require('./routes/index.js');
 const accountRouter = require('./routes/account.js');
 const postRouter    = require('./routes/post.js');
+const compression = require('compression')
+const helmet	= require('helmet');
 
-
+app.use(compression());
+app.use(helmet());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('resources'));
 app.post("*",function(req,res,next){
@@ -43,7 +46,7 @@ Date.prototype.format = function(f) {
 			case "a/p": return d.getHours() < 12 ? "오전" : "오후";
 			default: return $1;
 		}
-	});
+	}); 
 };
 
 String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s += this; } return s;};

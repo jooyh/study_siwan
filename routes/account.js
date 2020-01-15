@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
+const crypto = require('crypto');
 
 router.post('/idcheck.do',function(req,res){
     console.log("reqData",req.body);
@@ -71,7 +72,8 @@ router.post('/login.do',function(req,res){
         }else{
             userList = JSON.parse(content);
         }
-
+        var test = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
+        console.log("TEST",test);
         var reqEmail = req.body.email;
         var reqPw = req.body.pw;
         var isResult = {code:'EMAIL_ERR'};
