@@ -112,7 +112,7 @@ router.post('/uploadpost.do',upload.array("atchFile"), function(req,res){
     });
 });
 
-router.post('/getpostlist.do',function(req,res){
+router.post('/getpostlist.do', function(req,res){
     db.query(
         `select post_id
                ,post_content
@@ -121,15 +121,18 @@ router.post('/getpostlist.do',function(req,res){
                ,reg_id
                ,upd_dtm
                ,upd_id
-           from zoz7184.nb_post
+               ,(select user_name
+                from zoz7184.nb_user u
+               where p.reg_id = u.user_id) as user_name
+           from zoz7184.nb_post p
           where reg_id in (?)
           order by upd_dtm desc
         `
         ,[req.session.user.user_id]
-        ,function(err,results,fields){
-            console.log("post result ",results)
+        ,async function(err,postResults,fields){
+            // console.log("post result ",results)
             if(err) throw err;
-            for(var i=0; i<results.length; i++){
+            for(var i=0; i<postResults.length; i++){
                 db.query(
                     `select post_id
                             ,file_id
@@ -140,15 +143,16 @@ router.post('/getpostlist.do',function(req,res){
                       where post_id = ?
                       order by upd_dtm desc
                     `
-                    ,[results[i].post_id]
-                    ,function(err,fileResults,fields){
+                    ,[postResults[i].post_id]
+                    ,await function(err,fileResults,fields){
                         if(err) throw err;
-                        console.log("test",fileResults);
+                        // console.log("test",fileResults);
                         this.fileArr = fileResults;
-                    }.bind({post:results[i]})
+                    }.bind({post:postResults[i]})
                 )
             }
-            console.log("bf send...",results[i]);
+            // console.log("bf send...",results);
+            res.send(postResults);
         }
     );
 });

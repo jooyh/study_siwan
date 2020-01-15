@@ -116,7 +116,7 @@ function mkList(list) {
                             <div class="user-profile-img">
                                 <img src ="/img/img_user.png" alt="유그미프로필사진"/>
                             </div>
-                            <p class="user-info">${list[i].writer}</p>
+                            <p class="user-info">${list[i].user_name}</p>
                         </a>
                     </div>
                     <div class="tl-center">
@@ -128,8 +128,8 @@ function mkList(list) {
                             <i class="icon-comment"></i>
                         </div>
                         <div class="info-writing-box">
-                            <strong>${list[i].writer}</strong>
-                            <p class="info-txt">${list[i].content}</p>
+                            <strong>${list[i].user_name}</strong>
+                            <p class="info-txt">${list[i].post_content}</p>
                             <button type="button" class="btn-more">더보기</button>
                         </div>
                         <div class="user-comment-inputbox">
