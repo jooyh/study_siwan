@@ -2,54 +2,49 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const crypto = require('crypto');
+const db = require('../lib/common/db.js');
 
+/* Email 중복체크 */
 router.post('/idcheck.do',function(req,res){
-    console.log("reqData",req.body);
-    var userList;
-    fs.readFile(`./data/userInfo.json`, 'utf8', function(err, content){
-        console.log('content',content);
-        if(!content){
-            userList = [];
-        }else{
-            userList = JSON.parse(content);
+    db.query(
+        `select count(*) as cnt from zoz7184.nb_user where user_email = ?`
+        ,[req.body.email]
+        ,function(err,results,fields){
+            if(err) throw err;
+            console.log(results[0]);
+            res.send(results[0]);
         }
-
-        var isDuple = false;
-        for(var i in userList){
-            console.log(i,userList[i].email)
-            console.log(req.body.email)
-            if(userList[i].email == req.body.email){
-                isDuple = true;
-            }
-        }
-        res.send(isDuple);
-    });
+    );
 });
 
+/* 회원가입 */
 router.post('/join.do',function(req,res){
-    console.log("reqData",req.body);
-
-    fs.readFile(`./data/userInfo.json`, 'utf8', function(err, content){
-        var userList;
-        if(!content){
-            userList = [];
-        }else{
-            userList = JSON.parse(content);
+    req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
+    db.query(
+        `insert into zoz7184.nb_user 
+        (
+            user_email
+            ,user_pw
+            ,user_name
+            ,reg_dtm
+            ,upd_dtm
+        ) values
+        (   ?
+            ,?
+            ,?
+            ,now()
+            ,now()
+        )`
+        ,[req.body.email,req.body.pw,req.body.name]
+        ,function(err,results,fields){
+            if(err) throw err;
+            res.send({code:'SUCC'});
         }
-        console.log("userList",userList)
-        userList.push(req.body);
-
-        fs.writeFile(`./data/userInfo.json`, JSON.stringify(userList), 'utf8', function(err){
-            if(!err){
-                res.send({code:'SUCC'});
-            }else{
-                res.send({code:'ERR'});
-            }
-        })
-    });
+    );
 });
 
 router.post('/getUserList.do',function(req,res){
+    
     fs.readFile(`./data/userInfo.json`, 'utf8', function(err, content){
         var userList;
         if(!content){
@@ -63,32 +58,21 @@ router.post('/getUserList.do',function(req,res){
 });
 
 router.post('/login.do',function(req,res){
-    console.log("reqData",req.body);
-    var userList;
-    fs.readFile(`./data/userInfo.json`, 'utf8', function(err, content){
-        console.log('content',content);
-        if(!content){
-            userList = [];
-        }else{
-            userList = JSON.parse(content);
+    req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
+    db.query(
+        `select user_id
+               ,user_name
+               ,user_email
+               ,user_status
+           from zoz7184.nb_user 
+          where user_email = ? 
+            and user_pw = ?`
+        ,[req.body.email,req.body.pw ]
+        ,function(err,results,fields){
+            if(err) throw err;
+            res.send(results);
         }
-        var test = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
-        console.log("TEST",test);
-        var reqEmail = req.body.email;
-        var reqPw = req.body.pw;
-        var isResult = {code:'EMAIL_ERR'};
-        for(var i in userList){
-            if(userList[i].email == reqEmail && userList[i].pw == reqPw){
-                isResult = {code:'SUCC'};
-                break;
-            }else if(userList[i].email == reqEmail && userList[i].pw != reqPw){
-                isResult = {code:'PW_ERR'};
-                break;
-            }
-        }
-        console.log(isResult);
-        res.send(isResult);
-    });
+    );
 });
 
 module.exports = router;

@@ -53,10 +53,6 @@
                     <input type="text" name="name" placeholder="NAME"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
-                <div class="input-box"> 
-                    <input type="text" name="addr" placeholder="ADDRESS"/>
-                    <button type="button" class="btn-clear">입력글 지우기</button>
-                </div>
                 <div class="check-agree">
                     <input type="checkbox" id="check01"/>
                     <label for="check01">
@@ -130,13 +126,11 @@ function fn_login () {
         ,data : loginData
         ,success : function(result){
             console.log(result);
-            if(result.code == "SUCC") {
+            if(result.length > 0){
                 alert("로그인 하였습니다.");
-                location.href='/timeline'
-            } else if (result.code == "EMAIL_ERR"){
-                alert("없는 이메일 입니다.");
-            } else if (result.code == "PW_ERR") {
-                alert("비밀번호가 틀렸습니다.")
+                location.href='/timeline';
+            }else{
+                alert("이메일,비밀번호를 확인해주세요.")
             }
         }
         ,error : function(e){
@@ -157,8 +151,8 @@ function fn_check() {
         // ,data : JSON.stringify(data)
         ,data : data
         ,success : function(result){
-            console.log(result);
-            if(result) alert("중복된 이메일 입니다.");
+            console.log(result.cnt);
+            if(result.cnt > 0) alert("중복된 이메일 입니다.");
         }
         ,error : function(e){
             alert("시스템 오류가 발생했습니다.");
@@ -173,7 +167,6 @@ function fn_join() {
     userInfo.email = document.getElementById("reg-email").value;
     userInfo.pw = rePwVal;
     userInfo.name = document.getElementsByName("name")[0].value;
-    userInfo.addr = document.getElementsByName("addr")[0].value;
     console.log('userInfo: ', userInfo);
     if(pwVal != rePwVal) {
         alert("비밀번호가 일치하지않습니다.");
@@ -200,45 +193,5 @@ function fn_join() {
         }
     });
 }
-
-
-
-
-
-// function test(){
-//     $.ajax({
-//         url : '/idcheck.do'
-//         ,type:'post'
-//         ,contentType: 'application/json'
-//         ,data : JSON.stringify({email:'aguitarj@naver.com'})
-//         ,success : function(result){
-//             console.log(result)
-//         }
-//         ,error : function(e){
-    
-//         }
-//     });
-// }
-
-// function test2(){
-//     var userInfo = {
-//         email : "aguitarj@naver.com"
-//         ,pw : 123123
-//         ,name : '주영현'
-//         ,addr : '서울시 중랑구 중화동'
-//     }
-//     $.ajax({
-//         url : '/join.do'
-//         ,type:'post'
-//         ,contentType: 'application/json'
-//         ,data : JSON.stringify(userInfo)
-//         ,success : function(result){
-//             console.log(result)
-//         }
-//         ,error : function(e){
-    
-//         }
-//     });
-// }
 
 </script>
