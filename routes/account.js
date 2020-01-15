@@ -11,7 +11,6 @@ router.post('/idcheck.do',function(req,res){
         ,[req.body.email]
         ,function(err,results,fields){
             if(err) throw err;
-            console.log(results[0]);
             res.send(results[0]);
         }
     );
@@ -70,6 +69,7 @@ router.post('/login.do',function(req,res){
         ,[req.body.email,req.body.pw ]
         ,function(err,results,fields){
             if(err) throw err;
+            req.session.user = results[0];
             res.send(results);
         }
     );

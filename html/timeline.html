@@ -3,11 +3,6 @@
     <div class="logo-box">
         <img sre="/" alt="개스타그램로고" />
     </div>
-
-    <form id="posting" method="POST" enctype="multipart/form-data">
-        <input type="file" name="atchFile" multiple>
-        <input type="text" name="content">
-    </form>
 </div>
 
 
@@ -68,7 +63,7 @@
         <div class="pop-content">
             <div class="post-write-area">
                 <div class="photo-box">
-                    <input type="file"/>
+                    <input type="file" id="atchFile" multiple/>
                     <div class="image"></div>
                 </div>
             </div>
@@ -184,47 +179,18 @@ function mkList(list) {
 }
 
 function upLodePost() {
-    var contents = document.getElementsByClassName("textarea-basic")[0].value;
-    var post = {};
-    post.content = contents;
-    post.writer = "admin@admin.com"
-
-    $.ajax({
-        url : '/post/uploadpost.do'
-        ,type:'post'
-        // ,contentType: 'application/json'
-        ,data : post
-        ,success : function(result){
-            console.log(result);
-            if(result.code == "SUCC") {
-                alert("등록되었습니다.");
-                // document.getElementById("post_popup").style.display = "none";
-                location.reload();
-            }
-        }
-        ,error : function(e){
-            alert("시스템 오류가 발생했습니다.");
-        }
-    });
-}
-
-function test(){
-    
     var formData = new FormData(); 
-    $("#posting input[type='file']").each(function(i,item){
-        console.log(item.files);
-        for(var i=0; i<item.files.length; i++){
-            formData.append('atchFile',item.files[i]);
-        }
-    });
-    formData.append("TEST","aaaa");
 
-    for (var p of formData) {
-        console.log(p);
+    var content = document.getElementsByClassName("textarea-basic")[0].value;
+    var fileEl = document.getElementById("atchFile");
+    for(var i=0; i<fileEl.files.length; i++){
+        formData.append('atchFile',fileEl.files[i]);
     }
+    formData.append('content',content);
+    formData.append('userId',4);
 
     $.ajax({ 
-        url: '/post/test.do'
+        url: '/post/uploadpost.do'
         , data: formData
         , enctype: 'multipart/form-data'
         , processData: false
@@ -233,7 +199,38 @@ function test(){
         , success: function(result){ 
             console.log(result)
         } 
+        ,error : function(e){
+            alert("시스템 오류가 발생했습니다.");
+        }
     });
-
 }
+
+// function test(){
+    
+//     var formData = new FormData(); 
+//     $("#posting input[type='file']").each(function(i,item){
+//         console.log(item.files);
+//         for(var i=0; i<item.files.length; i++){
+//             formData.append('atchFile',item.files[i]);
+//         }
+//     });
+//     formData.append("TEST","aaaa");
+
+//     for (var p of formData) {
+//         console.log(p);
+//     }
+
+//     $.ajax({ 
+//         url: '/post/test.do'
+//         , data: formData
+//         , enctype: 'multipart/form-data'
+//         , processData: false
+//         , contentType: false
+//         , type: 'POST'
+//         , success: function(result){ 
+//             console.log(result)
+//         } 
+//     });
+
+// }
 </script>
