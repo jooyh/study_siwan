@@ -108,6 +108,23 @@ function getPostList(){
 function mkList(list) {
     html = ``;
     for (var i in list) {
+        var fileHtml = ``;
+        for(var j in list[i].fileArr){
+            var file = list[i].fileArr[j];
+            fileHtml += `
+                <div class="tl-center">
+                    <img alt="-" src=/upload/${file.file_snm}>
+                </div>
+            `;
+        }
+        if(!fileHtml){
+            fileHtml += `
+                <div class="tl-center">
+                    <img alt="-" src="/img/default.png">
+                </div>
+            `;
+        }
+
         html += ` 
             <div class="tl-item-wrap">
                 <div class="tl-item-box">
@@ -116,12 +133,10 @@ function mkList(list) {
                             <div class="user-profile-img">
                                 <img src ="/img/img_user.png" alt="유그미프로필사진"/>
                             </div>
-                            <p class="user-info">${list[i].user_name}</p>
+                            <p class="user-info">${list[i].user_name} test </p>
                         </a>
                     </div>
-                    <div class="tl-center">
-                        <img alt="-"/>
-                    </div>
+                    ${fileHtml}
                     <div class="tl-bottom">
                         <div class="icon-box">
                             <i class="icon-good"></i>
