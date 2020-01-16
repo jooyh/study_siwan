@@ -19,7 +19,7 @@ var app = http.createServer(function(request,response){
     if(pathname == "/") pathname = "main";
 
     //resource 요청의 경우
-    if(_url.search("resources") != -1){
+    if(_url.search(".css") != -1 || _url.search(".js") != -1){
         fs.readFile(`.${pathname}`,`utf8`,function(err,resource){
             response.writeHead(200);
             response.end(resource);
