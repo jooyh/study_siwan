@@ -213,6 +213,7 @@ function upLodePost() {
         , type: 'POST'
         , success: function(result){ 
             console.log(result)
+            if(result.code == "SUCC") location.reload;
         } 
         ,error : function(e){
             alert("시스템 오류가 발생했습니다.");
