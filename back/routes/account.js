@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const crypto = require('crypto');
-const db = require('../lib/db.js');
+const db = require('../lib/common/db.js');
 
 /* Email 중복체크 */
 router.post('/idcheck.do',function(req,res){

@@ -1,3 +1,2 @@
 node_modules/
-lib/common/db.js
-resources/upload/
+lib/db.js

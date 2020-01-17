@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const template = require('../lib/template.js');
+const template = require('../lib/common/template.js');
 const fs = require('fs');
 
 router.get('/', function(req, res){
@@ -9,7 +9,7 @@ router.get('/', function(req, res){
 
 router.get('/login', function(req, res){
     req.session.destroy();
-    fs.readFile(`./views/login.html`, 'utf8', function(err, content){
+    fs.readFile(`./html/login.html`, 'utf8', function(err, content){
         res.send(template.getHtml(content));
     });
 });
@@ -19,7 +19,7 @@ router.get('/timeline', function(req, res){
         return;
     }
     if(!req.session.user) res.redirect("/");
-    fs.readFile(`./views/timeline.html`, 'utf8', function(err, content){
+    fs.readFile(`./html/timeline.html`, 'utf8', function(err, content){
         res.send(template.getHtml(content));
     });
 });
@@ -28,7 +28,7 @@ router.get('/userpage', function(req, res){
         res.redirect("/");
         return;
     }
-    fs.readFile(`./views/userpage.html`, 'utf8', function(err, content){
+    fs.readFile(`./html/userpage.html`, 'utf8', function(err, content){
         res.send(template.getHtml(content));
     });
 });

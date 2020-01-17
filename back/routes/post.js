@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const multer = require('multer');
 const path = require("path");
-const connection = require('../lib/db.js');
+const connection = require('../lib/common/db.js');
 const async = require("async");
 
 //SET FILE STORAGE
