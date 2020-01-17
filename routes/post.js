@@ -92,6 +92,8 @@ router.post('/getpostlist.do', function(req,res){
 
 //SELECT POST LIST IN DB
 function selectPostList(req,cb){
+    if(! req.body.start) req.body.start = 0
+    if(! req.body.unit)  req.body.unit = 5;
     connection.execQuery(
         `select post_id
                ,post_content
@@ -111,8 +113,9 @@ function selectPostList(req,cb){
                             where follow_req_id = ? 
                          )
           order by upd_dtm desc
+          limit ? , ?
         `
-        ,[req.session.user.user_id,req.session.user.user_id]
+        ,[req.session.user.user_id,req.session.user.user_id,req.body.start,req.body.unit]
         ,function(err,postResults){
             if(err) throw err;
             cb(null, postResults); 
