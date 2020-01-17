@@ -7,7 +7,7 @@ function transaction(param,option){
         ,success : function(result){
             console.log(option.url , result);
             if(result.code.search("SUCC") != -1){
-                option.success(result.data);
+                if(option.success) option.success(result.data);
             }else{
                 if(result.msg){
                     alert(result.msg+` (${result.code})`);
@@ -82,3 +82,13 @@ function testLike(){
     });
 }
 
+function testSelectUserPost(){
+    var param = {email : "aguitarj@naver.com" , start:0 , unit : 5};
+
+    transaction(param,{
+        url : "/account/getUserInfo.do"
+    })
+    transaction(param,{
+        url : "/post/selectUserPost.do"
+    })
+}

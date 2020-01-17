@@ -90,22 +90,29 @@ document.getElementsByClassName("btn-post")[0].addEventListener("click", functio
 getPostList();
 
 function getPostList(){
-    $.ajax({
+    transaction(null,{
         url : '/post/getpostlist.do'
-        ,type:'post'
-        ,contentType: 'application/json'
-        ,data : JSON.stringify({})
         ,success : function(result){
-            console.log(result);
-            mkList(result)
-        }
-        ,error : function(e){
-            alert("시스템 오류가 발생했습니다.");
+            mkList(result);
         }
     });
+    // $.ajax({
+    //     url : '/post/getpostlist.do'
+    //     ,type:'post'
+    //     ,contentType: 'application/json'
+    //     ,data : JSON.stringify({})
+    //     ,success : function(result){
+    //         console.log(result);
+    //         mkList(result)
+    //     }
+    //     ,error : function(e){
+    //         alert("시스템 오류가 발생했습니다.");
+    //     }
+    // });
 }
 
 function mkList(list) {
+    console.log(list);
     html = ``;
     for (var i in list) {
         var fileHtml = ``;

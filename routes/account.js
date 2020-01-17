@@ -81,13 +81,20 @@ router.post('/login.do',function(req,res){
 
 /* FOLLOW */
 router.post('/reqFollow.do',function(req,res){
-    selectUserInfo(req,res,selectFollowInfo,insertFollow);
+    selectUserInfo(req,res,selectFollowInfo,insertFollow,"follow");
 });
 
 /* FOLLOW */
 router.post('/unFollow.do',function(req,res){
-    selectUserInfo(req,res,deleteFollow);
+    selectUserInfo(req,res,deleteFollow,"follow");
 });
+
+router.post('/getUserInfo.do',function(req,res){
+    selectUserInfo(req,res,function(userInfo){
+        res.send(code.resResultObj("SUCC_01",userInfo));
+    });
+});
+/*****************************[ function ]*************************************** */
 
 function deleteFollow(reqId,resId,res){
     connection.execQuery(
@@ -106,7 +113,7 @@ function deleteFollow(reqId,resId,res){
     )
 }
 
-function selectUserInfo(req,res,cb,cb2){
+function selectUserInfo(req,res,cb,cb2,sqlType){
     connection.execQuery(
         `select user_id
                ,user_name
@@ -114,7 +121,7 @@ function selectUserInfo(req,res,cb,cb2){
                ,user_status
            from zoz7184.nb_user 
           where user_email = ? 
-            and user_email != ? 
+            ${sqlType == 'follow' ? 'and user_email != ? ' : ''}
         `
         ,[req.body.email, req.session.user.user_email]
         ,function(err,results){
@@ -125,19 +132,19 @@ function selectUserInfo(req,res,cb,cb2){
             if(results.length == 0){
                 res.send(code.resResultObj("VAL_01",results));
             }else{
-                cb(req.session.user.user_id,results[0].user_id,res,cb2);
+                cb(results[0],req.session.user.user_id,res,cb2);
             }
         }
     );
 }
-function selectFollowInfo(reqId,resId,res,cb){
+function selectFollowInfo(resUserInfo,reqId,res,cb){
     connection.execQuery(
         `select count(*) AS cnt
            from zoz7184.nb_follow
           where follow_req_id = ?
             and follow_res_id = ?
         `
-        ,[reqId, resId]
+        ,[reqId, resUserInfo.user_id]
         ,function(err,results){
             if(err){
                 res.send(code.resResultObj("ERR_01",err));

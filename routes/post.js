@@ -36,13 +36,13 @@ router.post('/uploadpost.do',upload.array("atchFile"), function(req,res){
                     async.forEachOfLimit(req.files, 1, function(file, index, cb) {
                         file.userId = req.session.user.user_id;
                         insertFileInfo(postId,file,cb);
-                    },function(err){ // Each End fnc;
+                    },function eachEnd(err){ // Each End fnc;
                         if(err) throw err;
                         callback(null,arg)
                     });
                 }
             ],
-            function(err){ // waterfall End fnc;
+            function final(err){ // waterfall End fnc;
                 if(err) throw err;
                 res.send({code:"SUCC"});
             }
@@ -73,19 +73,20 @@ router.post('/getpostlist.do', function(req,res){
             }, function task2(arg, callback) {
                 async.forEachOfLimit(arg, 1, function(post, index, cb) {
                     selectAtchFileList(post,cb);
-                }, function() { // each END fnc.
+                }, function eachEnd(err) { // each END fnc.
+                    if(err) throw err;
                     callback(null, arg);
                 })
             }]
-            , function (err, results) {  // waterfall END fnc.
+            , function final(err, results) {  // waterfall END fnc.
                 if(err) throw err;
-                res.send(results);
+                res.send(code.resResultObj("SUCC_01",results));
             } 
         );
     } catch (error) {
         console.log("err in getpostlist.do....")
         console.error(error);
-        throw res.send({CODE:"ERR"});
+        res.send(code.resResultObj("ERR_01",error));
     }
 });
 
@@ -93,7 +94,64 @@ router.post('/likePost.do', function(req,res){
     selectLike(req,res,insertLikePost,deleteLikePost);
 });
 
+//사용자페이지 게시물조회
+router.post('/selectUserPost.do', function(req,res){
+    async.waterfall(
+        [
+            function task1(callback) { 
+                selectPostInUserPage(req,res,callback)
+            },
+            function task2(arg,callback) { 
+                async.forEachOfLimit(arg, 1, function(post, index, cb) {
+                    selectAtchFileList(post,cb);
+                },function eachEnd(err){
+                    if(err) throw err;
+                    callback(null, arg);
+                });
+            }
+        ]
+        , function final(err, results) {  // waterfall END fnc.
+            if(err) throw err;
+            res.send(code.resResultObj("SUCC_01",results));
+        } 
+    )
+});
+
 /******************** [ functions ] ********************/
+
+// 사용자 페이지 게시물 조회
+function selectPostInUserPage(req,res,cb){
+    if(!req.body.start) req.body.start = 0;
+    if(!req.body.unit) req.body.unit = 5;
+    connection.execQuery(
+        `select post_id
+          ,post_content
+          ,post_hashtag
+          ,reg_dtm
+          ,reg_id
+          ,upd_dtm
+          ,upd_id
+          ,(select user_name
+              from zoz7184.nb_user u
+             where p.reg_id = u.user_id) as user_name
+          from zoz7184.nb_post p
+         where reg_id = (
+                            select user_id
+                              from zoz7184.nb_user
+                             where user_email = ?
+                        )
+         limit ? , ?
+        `
+        ,[req.body.email, Number(req.body.start), Number(req.body.unit)]
+        ,function(err,results){
+            if(err){
+                res.send(code.resResultObj("ERR_01",err));
+                throw err;
+            }
+            cb(null,results);
+        }
+    )
+}
 
 // 게시물 좋아요
 function selectLike(req,res,likeCb,unLikeCb){
