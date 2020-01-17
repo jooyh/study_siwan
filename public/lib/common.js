@@ -71,3 +71,14 @@ function testUnFollow(){
         }
     });
 }
+
+function testLike(){
+    var param = {postId : 60}
+    transaction(param,{
+        url : "/post/likePost.do"
+        ,success : function(result){
+            console.log(result);
+        }
+    });
+}
+

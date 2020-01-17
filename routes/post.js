@@ -3,8 +3,9 @@ const router = express.Router();
 const fs = require('fs');
 const multer = require('multer');
 const path = require("path");
-const connection = require('../lib/db.js');
 const async = require("async");
+const connection = require('../lib/db.js');
+const code = require('../lib/code.js');
 
 //SET FILE STORAGE
 var storage = multer.diskStorage({
@@ -88,7 +89,82 @@ router.post('/getpostlist.do', function(req,res){
     }
 });
 
+router.post('/likePost.do', function(req,res){
+    selectLike(req,res,insertLikePost,deleteLikePost);
+});
+
 /******************** [ functions ] ********************/
+
+// 게시물 좋아요
+function selectLike(req,res,likeCb,unLikeCb){
+    connection.execQuery(
+        `select count(*) as cnt
+           from zoz7184.nb_like
+          where post_id = ?
+            and reg_id = ?
+        `
+        ,[req.body.postId,req.session.user.user_id]
+        ,function(err,results){
+            if(err){
+                res.send(code.resResultObj("ERR_01",err));
+                throw err;
+            }
+            console.log(results);
+            if(results[0].cnt != 0){
+                unLikeCb(req.body.postId,req.session.user.user_id,res);
+            }else{
+                likeCb(req.body.postId,req.session.user.user_id,res);
+            }
+        }
+    );
+}
+
+// 좋아요 등록
+function insertLikePost(postId,userId,res){
+    connection.execQuery(
+        `insert into zoz7184.nb_like
+         (
+             post_id
+            ,reg_id
+            ,upd_id
+            ,reg_dtm
+            ,upd_dtm
+         ) values (
+              ?
+             ,?
+             ,?
+             ,now()
+             ,now()
+         )
+        `
+        ,[postId,userId,userId]
+        ,function(err,results){
+            if(err){
+                res.send(code.resResultObj("ERR_02",err));
+                throw err;
+            }
+            res.send(code.resResultObj("SUCC_02",'like'));
+        }
+    );
+}
+
+// 좋아요 해제
+function deleteLikePost(postId,userId,res){
+    connection.execQuery(
+        `delete from zoz7184.nb_like
+          where post_id = ?
+            and reg_id = ?
+        `
+        ,[postId,userId]
+        ,function(err,results){
+            if(err){
+                res.send(code.resResultObj("ERR_02",err));
+                throw err;
+            }
+            res.send(code.resResultObj("SUCC_02",'unlike'));
+        }
+    );
+}
 
 //SELECT POST LIST IN DB
 function selectPostList(req,cb){
@@ -112,10 +188,19 @@ function selectPostList(req,cb){
                              from zoz7184.nb_follow 
                             where follow_req_id = ? 
                          )
+             or post_id = (
+                            select post_id
+                              from zoz7184.nb_like
+                             where reg_id = ?
+                          )
           order by upd_dtm desc
           limit ? , ?
         `
-        ,[req.session.user.user_id,req.session.user.user_id,req.body.start,req.body.unit]
+        ,[req.session.user.user_id
+         ,req.session.user.user_id
+         ,req.session.user.user_id
+         ,req.body.start
+         ,req.body.unit]
         ,function(err,postResults){
             if(err) throw err;
             cb(null, postResults); 
