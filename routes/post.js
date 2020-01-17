@@ -9,7 +9,7 @@ const async = require("async");
 //SET FILE STORAGE
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './resources/upload/')
+        cb(null, './public/upload/')
     },
     filename: function (req, file, cb) {
         var extension = path.extname(file.originalname);
@@ -167,7 +167,7 @@ function deleteFileInfo(postId){
 //DELETE FILE IN DIRECTORY
 function deleteFile(fileList){
     for(var i=0; i<fileList.length; i++){
-        fs.unlink(`./resources/upload/${fileList.filename}`, function(err){
+        fs.unlink(`./public/upload/${fileList.filename}`, function(err){
             if(err) throw err;
         });
     }

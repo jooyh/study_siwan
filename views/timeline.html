@@ -13,7 +13,7 @@
             <div class="tl-top">
                 <a href="#">
                     <div class="user-profile-img">
-                        <img src ="/img/img_user.png" alt="유그미프로필사진"/>
+                        <img src ="/images/images_user.png" alt="유그미프로필사진"/>
                     </div>
                     <p class="user-info">yougmi</p>
                 </a>
@@ -120,7 +120,7 @@ function mkList(list) {
         if(!fileHtml){
             fileHtml += `
                 <div class="tl-center">
-                    <img alt="-" src="/img/default.png">
+                    <img alt="-" src="/images/default.png">
                 </div>
             `;
         }
@@ -131,7 +131,7 @@ function mkList(list) {
                     <div class="tl-top">
                         <a href="#">
                             <div class="user-profile-img">
-                                <img src ="/img/img_user.png" alt="유그미프로필사진"/>
+                                <img src ="/images/img_user.png" alt="유그미프로필사진"/>
                             </div>
                             <p class="user-info">${list[i].user_name} test </p>
                         </a>
@@ -212,7 +212,7 @@ function upLodePost() {
         , contentType: false
         , type: 'POST'
         , success: function(result){ 
-            console.log(result)
+            console.log("uploadpost.do",result)
             if(result.code == "SUCC") location.reload;
         } 
         ,error : function(e){
@@ -221,32 +221,4 @@ function upLodePost() {
     });
 }
 
-// function test(){
-    
-//     var formData = new FormData(); 
-//     $("#posting input[type='file']").each(function(i,item){
-//         console.log(item.files);
-//         for(var i=0; i<item.files.length; i++){
-//             formData.append('atchFile',item.files[i]);
-//         }
-//     });
-//     formData.append("TEST","aaaa");
-
-//     for (var p of formData) {
-//         console.log(p);
-//     }
-
-//     $.ajax({ 
-//         url: '/post/test.do'
-//         , data: formData
-//         , enctype: 'multipart/form-data'
-//         , processData: false
-//         , contentType: false
-//         , type: 'POST'
-//         , success: function(result){ 
-//             console.log(result)
-//         } 
-//     });
-
-// }
 </script>
