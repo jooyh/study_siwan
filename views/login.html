@@ -118,25 +118,32 @@ function fn_login () {
     var loginData = {};
     loginData.email = emailVal;
     loginData.pw = pwVal;
-    $.ajax({
+    transaction(loginData,{
         url : '/account/login.do'
-        ,type:'post'
-        // ,contentType: 'application/json'
-        // ,data : JSON.stringify(loginData)
-        ,data : loginData
         ,success : function(result){
-            console.log(result);
-            if(result.length > 0){
-                alert("로그인 하였습니다.");
-                location.href='/timeline';
-            }else{
-                alert("이메일,비밀번호를 확인해주세요.")
-            }
-        }
-        ,error : function(e){
-
+            location.href='/timeline';
         }
     });
+
+    // $.ajax({
+    //     url : '/account/login.do'
+    //     ,type:'post'
+    //     // ,contentType: 'application/json'
+    //     // ,data : JSON.stringify(loginData)
+    //     ,data : loginData
+    //     ,success : function(result){
+    //         console.log(result);
+    //         if(result.length > 0){
+    //             alert("로그인 하였습니다.");
+    //             location.href='/timeline';
+    //         }else{
+    //             alert("이메일,비밀번호를 확인해주세요.")
+    //         }
+    //     }
+    //     ,error : function(e){
+
+    //     }
+    // });
 
 }
 

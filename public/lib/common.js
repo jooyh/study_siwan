@@ -1,11 +1,11 @@
-function transaction(data,option){
+function transaction(param,option){
     $.ajax({
          url  : option.url
         ,type : option.type ? option.type : 'POST'
-        ,data : data
+        ,data : param ? param : {}
         ,timeout:100000
         ,success : function(result){
-            console.log(url , result);
+            console.log(option.url , result);
             if(result.code.search("SUCC") != -1){
                 option.success(result.data);
             }else{
@@ -24,10 +24,10 @@ function transaction(data,option){
     });
 }
 
-function gfn_fileTransaction(data,option){
+function gfn_fileTransaction(param,option){
     $.ajax({ 
         url: option.url
-        , data: formData
+        , data: param
         , enctype: 'multipart/form-data'
         , processData: false
         , contentType: false
@@ -48,6 +48,26 @@ function gfn_fileTransaction(data,option){
         ,beforeSend:function(){
         }
         ,complete:function(){
+        }
+    });
+}
+
+function testFollow(){
+    var param = {email : "aguitarj@naver.com"}
+    transaction(param,{
+        url : "/account/reqFollow.do"
+        ,success : function(result){
+            alert("팔로우 등록");
+        }
+    });
+}
+
+function testUnFollow(){
+    var param = {email : "aguitarj@naver.com"}
+    transaction(param,{
+        url : "/account/unFollow.do"
+        ,success : function(result){
+            alert("언팔로우");
         }
     });
 }

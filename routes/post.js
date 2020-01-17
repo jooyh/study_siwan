@@ -92,7 +92,7 @@ router.post('/getpostlist.do', function(req,res){
 
 //SELECT POST LIST IN DB
 function selectPostList(req,cb){
-    connection.query(
+    connection.execQuery(
         `select post_id
                ,post_content
                ,post_hashtag
@@ -104,11 +104,16 @@ function selectPostList(req,cb){
                 from zoz7184.nb_user u
                where p.reg_id = u.user_id) as user_name
            from zoz7184.nb_post p
-          where reg_id in (?)
+          where reg_id = ?
+             or reg_id = ( 
+                           select follow_res_id 
+                             from zoz7184.nb_follow 
+                            where follow_req_id = ? 
+                         )
           order by upd_dtm desc
         `
-        ,[req.session.user.user_id]
-        ,function(err,postResults,fields){
+        ,[req.session.user.user_id,req.session.user.user_id]
+        ,function(err,postResults){
             if(err) throw err;
             cb(null, postResults); 
         }
@@ -117,7 +122,7 @@ function selectPostList(req,cb){
 
 //SELECT FILE LIST IN DB
 function selectAtchFileList(postInfo,cb){
-    connection.query(
+    connection.execQuery(
         `select post_id
                 ,file_id
                 ,file_snm
@@ -128,7 +133,7 @@ function selectAtchFileList(postInfo,cb){
           order by upd_dtm desc
         `
         ,[postInfo.post_id]
-        , function(err,fileResults,fields){
+        , function(err,fileResults){
             if(err) throw err;
             postInfo.fileArr = fileResults;
             cb();
@@ -138,12 +143,12 @@ function selectAtchFileList(postInfo,cb){
 
 //DELETE POST IN DB
 function deletePostInfo(postId){
-    connection.query(
+    connection.execQuery(
         `delete from zoz7184.nb_post 
           where post_id = ? 
         `
         ,[postId]
-        ,function (err,results,fields){
+        ,function (err,results){
             if(err) throw err;
             return results;
         }
@@ -152,12 +157,12 @@ function deletePostInfo(postId){
 
 //DELETE FILE IN DB
 function deleteFileInfo(postId){
-    connection.query(
+    connection.execQuery(
         `delete from zoz7184.nb_atch_file 
           where post_id = ? 
         `
         ,[postId]
-        ,function (err,results,fields){
+        ,function (err,results){
             if(err) throw err;
             return results;
         }
@@ -175,7 +180,7 @@ function deleteFile(fileList){
 
 //INSERT POST IN DB
 function insertPostInfo(req,cb){
-    connection.query(
+    connection.execQuery(
         `insert into zoz7184.nb_post 
         (
             post_content
@@ -196,7 +201,7 @@ function insertPostInfo(req,cb){
             ,req.body.hashtag
             ,req.session.user.user_id
             ,req.session.user.user_id]
-        ,function (err,results,fields){
+        ,function (err,results){
             if(err) throw err;
             cb(null,results);
         }
