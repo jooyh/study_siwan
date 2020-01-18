@@ -71,14 +71,23 @@ router.post('/getpostlist.do', function(req,res){
             [function task1(callback) { 
                 selectPostList(req,callback);
             }, function task2(arg, callback) {
+                console.log("task2..")
                 async.forEachOfLimit(arg, 1, function(post, index, cb) {
                     selectAtchFileList(post,cb);
                 }, function eachEnd(err) { // each END fnc.
                     if(err) throw err;
-                    callback(null, arg);
+                    callback(null,null, arg);
                 })
+            },function task3(arg,arg2,callback) { 
+                async.forEachOfLimit(arg2, 1, function(post, index, cb) {
+                    selectRecooment(post,cb);
+                },function eachEnd(err){
+                    if(err) throw err;
+                    callback(null, arg2);
+                });
             }]
             , function final(err, results) {  // waterfall END fnc.
+                console.log("final..")
                 if(err) throw err;
                 res.send(code.resResultObj("SUCC_01",results));
             } 
@@ -95,7 +104,7 @@ router.post('/likePost.do', function(req,res){
 });
 
 //사용자페이지 게시물조회
-router.post('/selectUserPost.do', function(req,res){
+router.post('/getUserPost.do', function(req,res){
     async.waterfall(
         [
             function task1(callback) { 
@@ -117,12 +126,92 @@ router.post('/selectUserPost.do', function(req,res){
     )
 });
 
+//댓글 등록
+router.post('/insertRecomment.do', function(req,res){
+    insertRecooment(req,res);
+})
+//댓글 등록
+router.post('/deleteRecomment.do', function(req,res){
+    deleteRecomment(req,res);
+})
 /******************** [ functions ] ********************/
+function deleteRecomment(req,res){
+    connection.execQuery(
+        `delete from zoz7184.nb_recomment
+          where recomment_id = ?
+        `,
+        [Number(req.body.recommentId)],
+        function(err,results){
+            if(err) throw err;
+            // if(results.warningCount != 0){
+                // res.send(code.resResultObj("ERR_04",results));
+            // }else{
+                res.send(code.resResultObj("SUCC_04",results));
+            // }
+        }
+    )
+}
+//댓글 등록
+function insertRecooment(req,res){
+    connection.execQuery(
+        `insert into zoz7184.nb_recomment
+            (
+                post_id
+                ,recomment_content
+                ,reg_id
+                ,upd_id
+                ,reg_dtm
+                ,upd_dtm
+            )VALUES(
+                 ?
+                ,?
+                ,?
+                ,?
+                ,now()
+                ,now()
+            )
+        `,
+        [req.body.postId
+        ,req.body.content
+        ,req.session.user.user_id
+        ,req.session.user.user_id],
+        function(err,results){
+            if(err) throw err;
+            res.send(code.resResultObj("SUCC_02",results));
+        }
+    );
+}
+
+// 게시물 댓글조회
+function selectRecooment(post,cb){
+    connection.execQuery(
+        `select r.recomment_id
+              , r.recomment_content
+              , r.reg_id
+              , r.reg_dtm
+              , u.user_email
+              , u.user_id
+              , u.user_name
+           from zoz7184.nb_recomment r
+              , zoz7184.nb_user u
+          where r.reg_id = u.user_id
+            and r.post_id = ?
+          order by r.reg_dtm desc
+        `
+        ,[post.post_id]
+        ,function(err,results){
+            if(err) throw err;
+            post.recomments = results;
+            cb();
+        }
+    );
+}
+
 
 // 사용자 페이지 게시물 조회
 function selectPostInUserPage(req,res,cb){
     if(!req.body.start) req.body.start = 0;
-    if(!req.body.unit) req.body.unit = 5;
+    if(!req.body.unit) req.body.unit = 10;
     connection.execQuery(
         `select post_id
           ,post_content
@@ -227,7 +316,7 @@ function deleteLikePost(postId,userId,res){
 //SELECT POST LIST IN DB
 function selectPostList(req,cb){
     if(! req.body.start) req.body.start = 0
-    if(! req.body.unit)  req.body.unit = 5;
+    if(! req.body.unit)  req.body.unit = 10;
     connection.execQuery(
         `select post_id
                ,post_content
@@ -241,20 +330,26 @@ function selectPostList(req,cb){
                where p.reg_id = u.user_id) as user_name
            from zoz7184.nb_post p
           where reg_id = ?
-             or reg_id = ( 
+             or reg_id in ( 
                            select follow_res_id 
                              from zoz7184.nb_follow 
                             where follow_req_id = ? 
                          )
-             or post_id = (
+             or post_id in (
                             select post_id
                               from zoz7184.nb_like
+                             where reg_id = ?
+                          )
+             or post_id in (
+                            select post_id
+                              from zoz7184.nb_recomment
                              where reg_id = ?
                           )
           order by upd_dtm desc
           limit ? , ?
         `
         ,[req.session.user.user_id
+         ,req.session.user.user_id
          ,req.session.user.user_id
          ,req.session.user.user_id
          ,req.body.start

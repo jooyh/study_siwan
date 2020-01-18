@@ -18,6 +18,7 @@ function transaction(param,option){
             alert("시스템 오류가 발생했습니다.");
         }
         ,beforeSend:function(){
+            console.log("param ...",param);
         }
         ,complete:function(){
         }
@@ -89,6 +90,20 @@ function testSelectUserPost(){
         url : "/account/getUserInfo.do"
     })
     transaction(param,{
-        url : "/post/selectUserPost.do"
+        url : "/post/getUserPost.do"
+    })
+}
+
+function testInsertRecooment(){
+    var param = {postId : 61 ,content : "댓글태스트중입니다."}
+    transaction(param,{
+        url : "/post/insertRecomment.do"
+    })
+}
+
+function testDeleteRecooment(){
+    var param = {recommentId : 4}
+    transaction(param,{
+        url : "/post/deleteRecomment.do"
     })
 }
