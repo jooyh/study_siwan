@@ -44,29 +44,28 @@
 <script type="text/javascript">
     const fieldName = prompt('What your name');
     const socket = io();
-    let room = ['room1', 'room2'];
     let num = 0;
 
-    socket.emit('joinRoom', num, fieldName);
+    socket.emit('joinRoom', fieldName);
 
     $('#sendBtn').click(() => {
-      socket.emit('chat message', num, fieldName, $('#content').val());
+      socket.emit('chatMessage',fieldName, $('#content').val());
       $('#content').val('');
       return false;
     });
 
-    socket.on('chat message', ( name, msg) => {
+    socket.on('chatMessage', ( name, msg, address) => {
       $('#messages').append($(`<li class="${fieldName == name ? "my-msg":"user-msg" }">`).text(name + '  :  ' +
-        msg));
+        msg + `(${address})`));
     });
 
     socket.on('leaveRoom', (num, name) => {
-      $('#messages').append($('<li>').text(name + '    leaved '
-        + room[num] + ' :('));
+        $('#messages').append($('<li>').text(`${name}님이 퇴장하셨습니다 (${address})`));
     });
 
-    socket.on('joinRoom', (num, name) => {
-      $('#messages').append($('<li>').text(name + '    joined '
-        + room[num] + ':)'));
+    socket.on('joinRoom', (name, address) => {
+      $('#messages').append($('<li>').text(`${name}님이 입장하셨습니다 (${address})`));
     });
+
+
 </script>
