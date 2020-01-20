@@ -33,4 +33,9 @@ router.get('/userpage', function(req, res){
     });
 });
 
+router.get('/chat', function(req, res, next) {
+    fs.readFile(`./views/chat.html`, 'utf8', function(err, content){
+        res.send(template.getHtml(content));
+    });
+});
 module.exports = router;

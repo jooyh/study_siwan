@@ -11,6 +11,7 @@ const sessionParser = require('express-session');
 const indexRouter   = require('./routes/index.js');
 const accountRouter = require('./routes/account.js');
 const postRouter    = require('./routes/post.js');
+const chatRouter    = require('./routes/chat.js');
 
 var app = express();
 
@@ -60,10 +61,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/'       ,indexRouter);
 app.use('/account',accountRouter);
 app.use('/post'   ,postRouter);
+app.use('/chat'   ,chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -80,5 +83,26 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+/*** Socket.IO 추가 ***/
+app.io = require('socket.io')();
+ 
+app.io.on('connection', function(socket){
+    
+  console.log("a user connected");
+  socket.broadcast.emit('hi');
+    
+  socket.on('disconnect', function(){
+      console.log('user disconnected');
+  });
+    
+  socket.on('chat message', (num, name, msg) => {
+      console.log(name, msg);
+      app.io.emit('chat message',name , msg);
+  });
+});
+
+
 
 module.exports = app;
