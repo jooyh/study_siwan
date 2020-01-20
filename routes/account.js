@@ -96,13 +96,13 @@ router.post('/getUserInfo.do',function(req,res){
 });
 /*****************************[ function ]*************************************** */
 
-function deleteFollow(reqId,resId,res){
+function deleteFollow(selectedUserInfo,resId,res){
     connection.execQuery(
         `delete from zoz7184.nb_follow
           where follow_req_id = ?
             and follow_res_id = ?
         `
-        ,[reqId, resId]
+        ,[resId,selectedUserInfo.user_id]
         ,function(err,results){
             if(err){
                 res.send(code.resResultObj("ERR_04",err));
@@ -153,7 +153,7 @@ function selectFollowInfo(resUserInfo,reqId,res,cb){
             if(results[0].cnt != 0){
                 res.send(code.resResultObj("VAL_03",results));
             }else{
-                cb(reqId,resId,res);
+                cb(reqId,resUserInfo.user_id,res);
             }
         }
     )
