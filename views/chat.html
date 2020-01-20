@@ -1,0 +1,42 @@
+<script src="/socket.io-client/dist/socket.io.slim.js"></script>
+<div class="chat-container">
+    <div class="chat-wrap">
+        <div class="chat-box">
+            <ul id="messages">
+
+            </ul>
+        </div>
+        <div class="enter-box">
+            <input type="text" id="content">
+            <button id="sendBtn">전송</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    const fieldName = prompt('What your name');
+    const socket = io();
+    let num = 0;
+
+    socket.emit('joinRoom', fieldName);
+
+    $('#sendBtn').click(() => {
+      socket.emit('chatMessage',fieldName, $('#content').val());
+      $('#content').val('');
+      return false;
+    });
+
+    socket.on('chatMessage', ( name, msg, address) => {
+      $('#messages').append($(`<li class="${fieldName == name ? "my-msg":"user-msg" }">`).text(name + '  :  ' +
+        msg + `(${address})`));
+    });
+
+    socket.on('leaveRoom', (num, name) => {
+        $('#messages').append($('<li>').text(`${name}님이 퇴장하셨습니다 (${address})`));
+    });
+
+    socket.on('joinRoom', (name, address) => {
+      $('#messages').append($('<li>').text(`${name}님이 입장하셨습니다 (${address})`));
+    });
+
+
+</script>

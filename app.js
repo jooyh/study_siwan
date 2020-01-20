@@ -60,6 +60,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/'       ,indexRouter);
 app.use('/account',accountRouter);
@@ -79,6 +80,28 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+
+/*** Socket.IO 추가 ***/
+app.io = require('socket.io')();
+ 
+app.io.on('connection', function(socket){
+	var address = socket.handshake.address;
+	console.log(socket.handshake);
+	
+  	socket.on('chatMessage', function(name,msg){
+      	app.io.emit('chatMessage',name,msg,address);
+	  });
+	  
+	socket.on('joinRoom', function(name){
+		app.io.emit('joinRoom',name,address);
+	});
+
+	socket.on('leaveRoom', function(name){
+		app.io.emit('joinRoom',name,address);
+	});
+ 
 });
 
 module.exports = app;
