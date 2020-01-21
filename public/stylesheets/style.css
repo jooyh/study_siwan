@@ -7,7 +7,7 @@ a {text-decoration:none;color:#444;}
 strong {font-weight:700;}
 
 /* COMMON */
-.container {padding-top:80px;padding-bottom:80px;}
+.container {padding-top:80px;padding-bottom:50px;}
 
 /* HEADER */
 header .top-banner {position:fixed;top:0;right:0;left:0;z-index:10;height:80px;background:#fcd454;}
@@ -22,8 +22,6 @@ nav .bottom-menu a {display:block;width:100%;height:100%;font-size:0;background-
 nav .bottom-menu .btn-timeline {background-image:url(/images/icon_home.png);}
 nav .bottom-menu .btn-post {background-image:url(/images/icon_plus.png);}
 nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
-
-
 
 /***  TIMELINE  ***/
 .tl-item-wrapper .tl-item-wrap {margin-top:30px;}
@@ -50,7 +48,6 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 .tl-item-wrapper .tl-item-box .tl-bottom .user-comment-inputbox .profile-img img {display:inline-block;width:100%;height:100%;}
 .tl-item-wrapper .tl-item-box .tl-bottom .user-comment-inputbox input {width:100%;height:100%;border:none;text-indent:40px;border-radius:25px;box-shadow:0 0 15px #ccc;}
 
-
 /*** POPUP ***/
 .pop-wrapper {position:fixed;top:0;right:0;bottom:0;left:0;z-index:10000;background:#fff;}
 .pop-wrapper .pop-header {width:100%;height:50px;padding:0 15px;background:#ccc;}
@@ -68,14 +65,18 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 .textarea-box .textarea-basic {width:100%;height:150px;margin-top:20px;resize:none;}
 
 /* CHAT */
-.chat-container{width:100%;}
+/* .chat-container{width:100%;}
 .chat-box{height:60vh;width:100%;}
 .enter-box{height:20vh;width:100%;}
 .enter-box input{height:40px;width:80%}
 .enter-box button{height:40px;width:19%}
 .user-msg {align-items:left;}
-.my-msg {align-items:right;}
+.my-msg {align-items:right;} */
+.chat-container {position:relative;height:calc(100vh - 130px);padding:0 15px;}
+.enter-box {position:absolute;right:15px;bottom:15px;left:15px;height:35px;}
+.enter-box input {width:100%;height:100%;padding:0 20px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
 
+.btn-send {position:absolute;top:4px;right:10px;width:20px;height:20px;border:none;background:url(/images/icon_send.png) no-repeat;font-size:0;}
 
 .btn-sub-area {margin-top:10px;}
 .btn-add {display:block;min-width:100px;padding:10px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:13px;color: #fff;letter-spacing:2px;}
