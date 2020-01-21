@@ -34,6 +34,10 @@ router.get('/userpage', function(req, res){
 });
 
 router.get('/chat', function(req, res, next) {
+    if(!req.session.user){
+        res.redirect("/");
+        return;
+    }
     fs.readFile(`./views/chat.html`, 'utf8', function(err, content){
         res.send(template.getHtml(content));
     });

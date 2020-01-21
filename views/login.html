@@ -121,6 +121,7 @@ function fn_login () {
     transaction(loginData,{
         url : '/account/login.do'
         ,success : function(result){
+            sessionStorage.setItem("user",JSON.stringify(result[0]));
             location.href='/timeline';
         }
     });
