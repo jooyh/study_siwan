@@ -13,11 +13,12 @@
     </div>
 </div>
 <script type="text/javascript">
-    const fieldName = prompt('What your name');
+    
     const socket = io();
     let num = 0;
+    var fieldName = JSON.parse(sessionStorage.getItem("user")).user_name;
 
-    socket.emit('joinRoom', fieldName);
+    socket.emit('joinRoom',fieldName);
 
     $('#sendBtn').click(() => {
       socket.emit('chatMessage',fieldName, $('#content').val());
@@ -38,5 +39,8 @@
       $('#messages').append($('<li>').text(`${name}님이 입장하셨습니다 (${address})`));
     });
 
+    window.onbeforeunload = function() {
+	    socket.emit('leaveRoom', fieldName);
+    }
 
 </script>

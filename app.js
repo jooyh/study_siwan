@@ -70,7 +70,7 @@ app.use('/post'   ,postRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
+// "start": "node ./bin/www"
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -85,23 +85,20 @@ app.use(function(err, req, res, next) {
 
 /*** Socket.IO 추가 ***/
 app.io = require('socket.io')();
- 
 app.io.on('connection', function(socket){
 	var address = socket.handshake.address;
-	console.log(socket.handshake);
+	socket.on('chatMessage', function(name,msg){
+		app.io.emit('chatMessage',name,msg,address);
+	});
 	
-  	socket.on('chatMessage', function(name,msg){
-      	app.io.emit('chatMessage',name,msg,address);
-	  });
-	  
 	socket.on('joinRoom', function(name){
 		app.io.emit('joinRoom',name,address);
 	});
-
+	
 	socket.on('leaveRoom', function(name){
-		app.io.emit('joinRoom',name,address);
+		app.io.emit('leaveRoom',name,address);
 	});
- 
+	
 });
 
 module.exports = app;
