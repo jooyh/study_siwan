@@ -5,6 +5,7 @@
 a {text-decoration:none;color:#444;}
 ::placeholder {color:#aaa;}
 strong {font-weight:700;}
+li {list-style:none;}
 
 /* COMMON */
 .container {padding-top:80px;padding-bottom:50px;}
@@ -72,11 +73,21 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 .enter-box button{height:40px;width:19%}
 .user-msg {align-items:left;}
 .my-msg {align-items:right;} */
-.chat-container {position:relative;height:calc(100vh - 130px);padding:0 15px;}
-.enter-box {position:absolute;right:15px;bottom:15px;left:15px;height:35px;}
+.chat-container {padding:5px 15px 50px;}
+.message-list li:after {content:'';display:block;clear:both;}
+.message-list li {margin-top:10px;}
+.message-list .room-info {font-size:12px;text-align:center;color:#aaa;}
+.message-list .msg-txt {display:inline-block;padding:5px 10px;background:#fff;border:1px solid #333;border-radius:20px;}
+.message-list .my-msg .msg-txt {float:right;border:none;background:#bfab8e;}
+
+.enter-box-area {position:fixed;right:15px;bottom:50px;left:15px;height:50px;background:#fff;}
+.enter-box {position:relative;height:35px;}
 .enter-box input {width:100%;height:100%;padding:0 20px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
 
-.btn-send {position:absolute;top:4px;right:10px;width:20px;height:20px;border:none;background:url(/images/icon_send.png) no-repeat;font-size:0;}
+
+
+
+.btn-send {position:absolute;top:0px;right:5px;width:40px;height:35px;border:none;background:url(/images/icon_send.png) no-repeat center/ 20px;font-size:0;}
 
 .btn-sub-area {margin-top:10px;}
 .btn-add {display:block;min-width:100px;padding:10px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:13px;color: #fff;letter-spacing:2px;}
