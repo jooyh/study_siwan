@@ -38,15 +38,6 @@
 
 </div>
 
-
-<div class="bottom-menu">
-    <button type="button" class="btn-post">
-        글쓰기    
-    </button>
-</div>
-
-
-
 <div id="post_popup" class="pop-wrapper" style="display:none">
     <div class="pop-wrap">
         <div class="pop-header">
@@ -75,9 +66,7 @@
 
 <script>
 
-document.getElementsByClassName("btn-post")[0].addEventListener("click", function(){
-    document.getElementById("post_popup").style.display = "block";
-})
+
 
 
 getPostList();
@@ -149,7 +138,7 @@ function mkList(list) {
                         </div>
                         <div class="user-comment-inputbox">
                             <div class="profile-img">
-                                <img alt="-" />
+                                <img src ="/images/img_user.png" alt="유그미프로필사진"/>
                             </div>
                             <input type="text" placeholder="댓글달기..."/>
                         </div>
