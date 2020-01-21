@@ -86,19 +86,21 @@ app.use(function(err, req, res, next) {
 /*** Socket.IO 추가 ***/
 app.io = require('socket.io')();
 app.io.on('connection', function(socket){
-	var address = socket.handshake.address;
-	socket.on('chatMessage', function(name,msg){
-		app.io.emit('chatMessage',name,msg,address);
+	socket.on("access", function(data) {
+		console.log("Access",data)
+		var address = socket.handshake.address;
+		socket.on('chatMessage', function(name,msg){
+			app.io.emit('chatMessage',name,msg,address);
+		});
+		
+		socket.on('joinRoom', function(name,roomId){
+			app.io.emit('joinRoom',name,address);
+		});
+		
+		socket.on('leaveRoom', function(name){
+			app.io.emit('leaveRoom',name,address);
+		});
 	});
-	
-	socket.on('joinRoom', function(name){
-		app.io.emit('joinRoom',name,address);
-	});
-	
-	socket.on('leaveRoom', function(name){
-		app.io.emit('leaveRoom',name,address);
-	});
-	
 });
 
 module.exports = app;

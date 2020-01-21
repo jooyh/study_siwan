@@ -25,14 +25,15 @@ router.post('/join.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
     connection.query(
         `insert into zoz7184.nb_user 
-        (
-            user_email
+        (    user_id
+            ,user_email
             ,user_pw
             ,user_name
             ,reg_dtm
             ,upd_dtm
         ) values
-        (   ?
+        (    UUID()
+            ,?
             ,?
             ,?
             ,now()

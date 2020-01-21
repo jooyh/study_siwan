@@ -23,19 +23,21 @@
     
     const socket = io();
     let num = 0;
-    var fieldName = JSON.parse(sessionStorage.getItem("user")).user_name;
-    var roomCode = JSON.parse(sessionStorage.getItem("user")).user_id;
+    var userInfo = JSON.parse(sessionStorage.getItem("user"));
+    var userName = userInfo.user_name;
+    var roomId = new Date().getTime()+"_"+fn_getRandomInt(1000,9999);
 
-    socket.emit('joinRoom',fieldName); 
+    socket.emit("access",{userInfo,roomId});
+    socket.emit('joinRoom',userName,roomId);
 
     $('#sendBtn').click(() => {
-      socket.emit('chatMessage',fieldName, $('#content').val());
+      socket.emit('chatMessage',userName, $('#content').val());
       $('#content').val('');
       return false;
     });
 
     socket.on('chatMessage', ( name, msg, address) => {
-      $('#messages').append($(`<li class="${fieldName == name ? "my-msg":"user-msg" }">`).text(name + '  :  ' +
+      $('#messages').append($(`<li class="${userName == name ? "my-msg":"user-msg" }">`).text(name + '  :  ' +
         msg + `(${address})`));
     });
 
@@ -48,7 +50,7 @@
     });
 
     window.onbeforeunload = function() {
-	    socket.emit('leaveRoom', fieldName);
+	    socket.emit('leaveRoom', userName);
     }
 
 </script>
