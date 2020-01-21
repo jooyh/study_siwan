@@ -1,4 +1,11 @@
 <script src="/socket.io-client/dist/socket.io.slim.js"></script>
+<div class="chat-list-container">
+    <div class="chat-list">
+
+
+    </div>
+    <button id="new-chat-btn"></button>
+</div>
 <div class="chat-container">
     <div class="chat-wrap">
         <div class="chat-box">
@@ -6,8 +13,8 @@
 
             </ul>
         </div>
-        <div class="enter-box">
-            <input type="text" id="content">
+        <div class="enter-box"> 
+            <input type="text" id="content"> 
             <button id="sendBtn">전송</button>
         </div>
     </div>
@@ -17,8 +24,9 @@
     const socket = io();
     let num = 0;
     var fieldName = JSON.parse(sessionStorage.getItem("user")).user_name;
+    var roomCode = JSON.parse(sessionStorage.getItem("user")).user_id;
 
-    socket.emit('joinRoom',fieldName);
+    socket.emit('joinRoom',fieldName); 
 
     $('#sendBtn').click(() => {
       socket.emit('chatMessage',fieldName, $('#content').val());
