@@ -1,6 +1,6 @@
 <div id="logo-box" class="login-visual">
     <button type="button" class="btn-back" onclick="fn_moveLoginPage()">뒤로가기</button>
-    <div class="logo"></div>
+    <!-- <div class="logo"></div> -->
 </div>
 <div id="login-box" class="login-content">
     <h2 class="login-tit">Hello</h2>
@@ -87,6 +87,11 @@ for (var i = 0; i < inputBox.length; i++) {
     })
 }
 
+/* 헤더, 네비 제거 */
+document.getElementsByTagName("header")[0].style.display = "none";
+document.getElementsByTagName("nav")[0].style.display = "none";
+document.getElementsByClassName("container")[0].style.padding = 0;
+
 /* 회원가입페이지 이동 함수 */
 function fn_moveJoinPage() {
     document.getElementById("logo-box").classList.add("h-animate");
@@ -99,7 +104,6 @@ function fn_moveLoginPage() {
     document.getElementById("login-box").style.display = "block";
     document.getElementById("join-box").style.display = "none";
 }
-
 
 var inputBox = document.getElementsByClassName("input-box");
 var input;
