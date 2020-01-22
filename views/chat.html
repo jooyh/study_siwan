@@ -221,5 +221,14 @@
                 </li>
             `;
         $("#messages").append(html);
+        $(".chat-user-info").each(function(i,item){
+            var roomInfo = JSON.parse($(item).attr("data-room-info"));
+            if(roomInfo.room_id == msg.room_id){
+                $(item).find(".chat-user-msg").text(msg.msg)
+                $(item).find(".date").text(msg.reg_dtm)
+            }
+        });
     });
+
+
 </script>

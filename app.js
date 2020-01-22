@@ -105,9 +105,15 @@ app.io.on('connection', function(socket){
 
 	//채팅방 입장
 	socket.on("enter",function(roomInfo){
-		chatRouter.chatFncs.enterChatRoom(roomInfo,function(roomDtlInfo){
-			app.io.emit('enter',roomDtlInfo);
-		})
+		socket.join(roomInfo.room_id, () => {
+			chatRouter.chatFncs.enterChatRoom(roomInfo,function(roomDtlInfo){
+				app.io.to(roomInfo.room_id).emit('enter', roomDtlInfo);
+			});
+		});
+
+		// chatRouter.chatFncs.enterChatRoom(roomInfo,function(roomDtlInfo){
+		// 	app.io.emit('enter',roomDtlInfo);
+		// })
 	});
 
 	//채팅방 퇴장

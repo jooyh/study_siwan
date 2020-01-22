@@ -202,9 +202,30 @@ function insertChatMsg(msgInfo,cb){
         ]
         ,function(err,results){
             if(err) throw err
-            cb(results);
+            cb(results.insertId);
         }
     );
+}
+
+function selectChatMsg(msgId,cb){
+    connection.execQuery(
+        `select m.chat_id
+            , m.room_id
+            , m.msg
+            , m.file_id
+            , m.read_cnt
+            , m.reg_dtm
+            , u.user_name
+        from zoz7184.nb_chat_msg m
+            , zoz7184.nb_user u
+        where m.user_id = u.user_id
+        and m.chat_id = ?`
+        ,[msgId]
+        ,function(err,results){
+            if(err) throw err
+            cb(results);
+        }
+    )
 }
 
 var chatFncs = {
@@ -231,7 +252,9 @@ var chatFncs = {
     //메세지 전송
     sendMsg : function(msgInfo,cb){
         insertChatMsg(msgInfo,function(results){
-            cb(msgInfo);
+            selectChatMsg(results,function(results){
+                cb(results[0]);
+            })
         })
     }
 }
