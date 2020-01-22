@@ -6,7 +6,7 @@ a {text-decoration:none;color:#444;}
 ::placeholder {color:#aaa;}
 strong {font-weight:700;}
 li {list-style:none;}
-
+i {display:inline-block;background-repeat:no-repeat;background-position:center;background-size:cover;}
 /* COMMON */
 .container {padding-top:80px;padding-bottom:50px;}
 
@@ -39,11 +39,12 @@ nav .bottom-menu .btn-chat.active {background-image:url(/images/icon_chat_a.png)
 .tl-item-wrapper .tl-item-box .tl-top .user-profile-img img {display:block;width:100%;height:100%;}
 .tl-item-wrapper .tl-item-box .tl-top .user-info {display:inline-block;line-height:33px;}
 
-.tl-item-wrapper .tl-item-box .tl-center {width:100%;height:450px;background:#ccc;}
+.tl-item-wrapper .tl-item-box .tl-center {position:relative;width:100%;height:450px;background:#ccc;}
 .tl-item-wrapper .tl-item-box .tl-center img {display:block;width:100%;height:100%;}
+.tl-item-wrapper .tl-item-box .tl-center i {position:absolute;top:0;left:0;z-index:10;width:100%;height:100%;background-size:200px;opacity: 0.8;}
 
 .tl-item-wrapper .tl-item-box .tl-bottom {padding:0 15px;}
-.tl-item-wrapper .tl-item-box .tl-bottom .icon-box i {display:inline-block;width:40px;height:40px;border:1px solid #ccc;}
+.tl-item-wrapper .tl-item-box .tl-bottom .icon-box i {width:40px;height:40px;background-size:25px;}
 .tl-item-wrapper .tl-item-box .tl-bottom .info-txt {font-size:14px;margin-top:5px;}
 .tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box {font-size:13px;}
 .tl-item-wrapper .tl-item-box .tl-bottom .info-writing-box .info-txt {display:inline-block;transition:all 2s;}
@@ -97,3 +98,8 @@ nav .bottom-menu .btn-chat.active {background-image:url(/images/icon_chat_a.png)
 .btn-add {display:block;min-width:100px;padding:10px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:13px;color: #fff;letter-spacing:2px;}
 
 .btn-back {display:inline-block;position:absolute;left:0;top:0;width:50px;height:50px;border:none;background:url(/images/icon_arrow_left.png) no-repeat center / 25px transparent; font-size:0;}
+
+
+i.icon-good {background-image: url(/images/icon_star.png);}
+i.icon-good.active {background-image: url(/images/icon_star_a.png);}
+i.icon-comment {background-image: url(/images/icon_comment.png);}

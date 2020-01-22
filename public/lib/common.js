@@ -10,9 +10,37 @@ function fn_pageInit(){
     $(document).on("click",".btn-back",function(){
         $(this).parents(".pop-wrapper").fadeOut();
     });
+
     // 하단 네비 엑티브
-    $(document).on("click",".bottom-menu a",function(){
-        $(this).addClass("active");
+    var locationHref = window.location.href.split("http://localhost:3000")[1];
+    var navHref = $(".bottom-menu a").attr("href");
+    $(".bottom-menu a").removeClass("active");
+    if(locationHref == navHref) {
+        $("a[href='"+navHref+"']").addClass("active");
+    }
+
+    // 하단네비 새게시물 버튼 팝업 
+    $(document).on("click",".btn-post",function(){
+        $("#post_popup").fadeIn();
+    });
+
+    // 타임라인 좋아요 클릭
+    $(document).on("click",".icon-box i",function(){
+        if ($(this).hasClass("active")){
+            $(this).removeClass("active")
+        } else {
+            $(this).addClass("active");
+        }
+    });
+    $(document).on("click",".tl-center",function(){ 
+        var iconGood = $(this).next(".tl-bottom").find(".icon-good")
+        if (iconGood.hasClass("active")){
+            iconGood.removeClass("active")
+            $(this).find(".icon-good").remove();
+        } else {
+            $(this).append("<i class='icon-good active'></i>")
+            iconGood.addClass("active")
+        }
     });
     // 팝업 엑스버튼 
     // $(document).on("click",".btn-close",function(){

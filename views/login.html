@@ -127,6 +127,7 @@ function fn_login () {
         ,success : function(result){
             sessionStorage.setItem("user",JSON.stringify(result[0]));
             location.href='/timeline';
+            $(".btn-timeline").addClass("active");
         }
     });
 
