@@ -21,7 +21,8 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
+ 
+<script type="text/javascript"> 
     
     const socket = io();
     let num = 0;
@@ -29,34 +30,51 @@
     var userName = userInfo.user_name;
     var roomId = new Date().getTime()+"_"+fn_getRandomInt(1000,9999);
 
-    socket.emit("access",{userInfo,roomId});
-    socket.emit('joinRoom',userName,roomId);
+    function testSelectUserList(){
+        transaction({searchData:"ag"},{
+            url : "/account/getUserList.do"
+            ,success : function(result){
+                result.unshift(userInfo); // 채팅방 유저 배열 첫번째에 세션 사용자정보 입력
+                var roomInfo = {}
+                roomInfo.room_id = roomId;
+                roomInfo.userList = result;
+                socket.emit("access",roomInfo);
+            }
+        })
+    }
 
-    $('#sendBtn').click(() => {
-      socket.emit('chatMessage',userName, $('#content').val());
-      $('#content').val('');
-      return false;
+    socket.on('access', ( roomInfo ) => {
+        console.log("access",roomInfo);
+    });
+
+    // socket.emit("access",{userInfo,roomId});
+    // socket.emit('joinRoom',userName,roomId);
+
+    // $('#sendBtn').click(() => {
+    //   socket.emit('chatMessage',userName, $('#content').val());
+    //   $('#content').val('');
+    //   return false;
 
         
-    });
+    // });
 
-    socket.on('chatMessage', ( name, msg, address) => {
-      $('#messages').append($(`<li class="${userName == name ? "my-msg":"user-msg" }">`).append(`<p class="msg-user">${name}</p><p class="msg-txt">${msg}</p>`));
-        $(".my-msg .msg-user").hide();
-        // .text(name + '  :  ' +
-        // msg + `(${address})`));
-    });
+    // socket.on('chatMessage', ( name, msg, address) => {
+    //   $('#messages').append($(`<li class="${userName == name ? "my-msg":"user-msg" }">`).append(`<p class="msg-user">${name}</p><p class="msg-txt">${msg}</p>`));
+    //     $(".my-msg .msg-user").hide();
+    //     // .text(name + '  :  ' +
+    //     // msg + `(${address})`));
+    // });
 
-    socket.on('leaveRoom', (num, name) => {
-        $('#messages').append($('<li class="room-info">').text(`${name}님이 퇴장하셨습니다 (${address})`));
-    });
+    // socket.on('leaveRoom', (num, name) => {
+    //     $('#messages').append($('<li class="room-info">').text(`${name}님이 퇴장하셨습니다 (${address})`));
+    // });
 
-    socket.on('joinRoom', (name, address) => {
-      $('#messages').append($('<li class="room-info">').text(`${name}님이 입장하셨습니다 (${address})`));
-    });
+    // socket.on('joinRoom', (name, address) => {
+    //   $('#messages').append($('<li class="room-info">').text(`${name}님이 입장하셨습니다 (${address})`));
+    // });
 
-    window.onbeforeunload = function() {
-	    socket.emit('leaveRoom', userName);
-    }
+    // window.onbeforeunload = function() {
+	//     socket.emit('leaveRoom', userName);
+    // }
 
 </script>

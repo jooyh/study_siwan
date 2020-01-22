@@ -11,6 +11,7 @@ const sessionParser = require('express-session');
 const indexRouter   = require('./routes/index.js');
 const accountRouter = require('./routes/account.js');
 const postRouter    = require('./routes/post.js');
+const chatRouter    = require('./routes/chat.js');
 
 var app = express();
 
@@ -60,11 +61,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/'       ,indexRouter);
 app.use('/account',accountRouter);
 app.use('/post'   ,postRouter);
+app.use('/chat'   ,chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -86,19 +89,19 @@ app.use(function(err, req, res, next) {
 /*** Socket.IO 추가 ***/
 app.io = require('socket.io')();
 app.io.on('connection', function(socket){
-	socket.on("access", function(data) {
-		console.log("Access",data)
-		var address = socket.handshake.address;
-		socket.on('chatMessage', function(name,msg){
-			app.io.emit('chatMessage',name,msg,address);
+	socket.on("access", function(roomInfo) {
+		console.log("Access",roomInfo)
+		chatRouter.chatFncs.joinChatRoom(roomInfo,function(roomInfo){
+			app.io.emit('access',roomInfo);
+		});
+
+		socket.on('sendMsg', function(msgInfo){
+			chatRouter.chatFncs.sendMsg(msgInfo);
+			app.io.emit('sendMsg',msgInfo);
 		});
 		
-		socket.on('joinRoom', function(name,roomId){
-			app.io.emit('joinRoom',name,address);
-		});
-		
-		socket.on('leaveRoom', function(name){
-			app.io.emit('leaveRoom',name,address);
+		socket.on('leaveRoom', function(roomInfo){
+			app.io.emit('leaveRoom',roomInfo);
 		});
 	});
 });

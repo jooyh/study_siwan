@@ -94,6 +94,15 @@ router.post('/getUserInfo.do',function(req,res){
         res.send(code.resResultObj("SUCC_01",userInfo));
     });
 });
+
+router.post('/getUserList.do',function(req,res){
+    selectUserList(req.body.searchData,function(err,results){
+        if(err){
+            res.send(code.resResultObj("ERR_01",err));
+        }
+        res.send(code.resResultObj("SUCC_01",results));
+    })    
+});
 /*****************************[ function ]*************************************** */
 
 function deleteFollow(selectedUserInfo,resId,res){
@@ -186,6 +195,25 @@ function insertFollow(reqId,resId,res){
                 throw err;
             }
             res.send(code.resResultObj("SUCC_02",results));
+        }
+    );
+}
+
+function selectUserList(searchData,cb){
+    connection.execQuery(
+        `select user_id
+              , user_email
+              , user_name
+           from zoz7184.nb_user
+          where user_email like CONCAT('%',?,'%')
+             or user_name like CONCAT('%',?,'%')
+        `
+        ,[searchData,searchData]
+        ,function(err,results){
+            if(err){
+                cb(err);
+            }
+            cb(err,results)
         }
     );
 }
