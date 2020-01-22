@@ -6,9 +6,18 @@
        });   
  */
 function fn_pageInit(){
-    $(document).on("click","#testDiv",function(){
-        alert("!");
+    // 팝업 뒤로가기 버튼
+    $(document).on("click",".btn-back",function(){
+        $(this).parents(".pop-wrapper").fadeOut();
     });
+    // 하단 네비 엑티브
+    $(document).on("click",".bottom-menu a",function(){
+        $(this).addClass("active");
+    });
+    // 팝업 엑스버튼 
+    // $(document).on("click",".btn-close",function(){
+    //     $(this).parents(".pop-wrapper").hide();
+    // });
 }
 
 function transaction(param,option){
