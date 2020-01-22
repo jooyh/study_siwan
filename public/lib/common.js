@@ -13,11 +13,13 @@ function fn_pageInit(){
 
     // 하단 네비 엑티브
     var locationHref = window.location.href.split("http://localhost:3000")[1];
-    var navHref = $(".bottom-menu a").attr("href");
     $(".bottom-menu a").removeClass("active");
-    if(locationHref == navHref) {
-        $("a[href='"+navHref+"']").addClass("active");
-    }
+    $(".bottom-menu a").each(function(){
+        var href = $(this).attr("href")    ;
+        if(locationHref == href) {
+            $("a[href='"+href+"']").addClass("active");
+        }
+    })
 
     // 하단네비 새게시물 버튼 팝업 
     $(document).on("click",".btn-post",function(){
