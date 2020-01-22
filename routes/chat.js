@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../lib/db.js');
 const async = require("async");
+const connection = require('../lib/db.js');
+const code = require('../lib/code.js');
 
 router.post('/getChatRoomList.do', function(req,res){
     connection.execQuery(
@@ -22,7 +23,7 @@ router.post('/getChatRoomList.do', function(req,res){
                ) AS last_msg
           from zoz7184.nb_chat_join_room jr
          where jr.user_id = ?
-           amd jr.use_yn = 1
+           and jr.use_yn = 1
         `,
         [req.session.user.user_id]
         ,function(err,results){
@@ -36,6 +37,7 @@ router.post('/getChatRoomList.do', function(req,res){
 });
 
 router.post('/getChatRoom.do', function(req,res){
+    console.log("/getChatRoom.do",req.body)
     connection.execQuery(
         `
         select msg.room_id
@@ -66,33 +68,10 @@ router.post('/getChatRoom.do', function(req,res){
     );
 });
 
-// router.post('/joinChatRoom.do', function(req,res){
-//     var roomInfo = req.body.chatRoomInfo;
-//     async.waterfall(
-//         [
-//             function task1(callback) { 
-//                 selectChatRoom(roomInfo,function(cnt){
-//                     if(cnt != 0){ // 기존 방 있음 ( join )
-//                         joinChatRoom(roomInfo,callback);
-//                     }else{ // 기존방 없음 ( create )
-//                         createChatRoom(roomInfo,function(roomInfo){
-//                             joinChatRoom(roomInfo,callback);
-//                         },callback);
-//                     }
-//                 },callback);
-//             },
-//             function final(err) { 
-//                 if(err) throw err;
-//                 res.redirect("/getChatRoom.do");
-//             }
-//         ]
-//     );
-// });
-
 
 /***************************** functions **********************************/
-function insertJoinChatRoom(roomInfo,asyncCb){
-    console.log("insertJoinChatRoom >",roomInfo)
+function insertChatJoinRoom(roomInfo,asyncCb){
+    console.log("insertChatJoinRoom >",roomInfo)
     async.forEachOfLimit(roomInfo.userList, 1, function(user, index, cb) {
         connection.execQuery(
             `
@@ -195,24 +174,21 @@ var chatFncs = {
                         selectChatRoom(roomInfo,callback,function(cnt){
                             console.log("selectChatRoom .. RESULT >>" , cnt);
                             if(cnt != 0){ // 기존 방 있음 ( join )
-                                callback(roomInfo);
+                                callback(null,roomInfo);
                             }else{ // 기존방 없음 ( create )
                                 createChatRoom(roomInfo,callback,function(roomInfo,callback){
-                                    insertJoinChatRoom(roomInfo,callback);
+                                    insertChatJoinRoom(roomInfo,callback);
                                 });
                             }
                         });
                     },
-                    function final(err,roomInfo) { 
-                        console.log("final err",err)
-                        console.log("final rs",roomInfo)
-                        if(err) throw err;
+                    function final(roomInfo) { 
                         cb(roomInfo);
                     }
                 ]
             );
         } catch (error) {
-            console.error;
+            console.error(error);
             throw error;
         }
     },

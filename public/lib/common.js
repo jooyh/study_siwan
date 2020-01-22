@@ -1,3 +1,25 @@
+/**
+ * 페이지 초기접근 함수 ( $functon 또는 ready 는 사용하지 않음 )
+ * 팝업에서 필요한 공통이벤트는 아래 예시처럼 작성
+ * ex) $(document).on("click","#testDiv",function(){
+          alert("!");
+       });   
+ */
+function fn_pageInit(){
+    // 팝업 뒤로가기 버튼
+    $(document).on("click",".btn-back",function(){
+        $(this).parents(".pop-wrapper").fadeOut();
+    });
+    // 하단 네비 엑티브
+    $(document).on("click",".bottom-menu a",function(){
+        $(this).addClass("active");
+    });
+    // 팝업 엑스버튼 
+    // $(document).on("click",".btn-close",function(){
+    //     $(this).parents(".pop-wrapper").hide();
+    // });
+}
+
 function transaction(param,option){
     $.ajax({
          url  : option.url

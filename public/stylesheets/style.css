@@ -21,8 +21,12 @@ nav .bottom-menu {display:table;width:100%;height:50px;background:#fff;}
 nav .bottom-menu li {display:table-cell;width:1%;}
 nav .bottom-menu a {display:block;width:100%;height:100%;font-size:0;background-repeat:no-repeat;background-position:center;background-size:30px;}
 nav .bottom-menu .btn-timeline {background-image:url(/images/icon_home.png);}
+nav .bottom-menu .btn-timeline.active {background-image:url(/images/icon_home_a.png);}
 nav .bottom-menu .btn-post {background-image:url(/images/icon_plus.png);}
 nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
+nav .bottom-menu .btn-mypage.active {background-image:url(/images/icon_user_02_a.png);}
+nav .bottom-menu .btn-chat {background-image:url(/images/icon_chat.png);}
+nav .bottom-menu .btn-chat.active {background-image:url(/images/icon_chat_a.png);}
 
 /***  TIMELINE  ***/
 .tl-item-wrapper .tl-item-wrap {margin-top:30px;}
@@ -51,8 +55,8 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 
 /*** POPUP ***/
 .pop-wrapper {position:fixed;top:0;right:0;bottom:0;left:0;z-index:10000;background:#fff;}
-.pop-wrapper .pop-header {position:relative;width:100%;height:50px;padding-left:60px;background:#ccc;}
-.pop-wrapper .pop-header .tit {font-size:18px;line-height:50px;color:#fff;}
+.pop-wrapper .pop-header {position:relative;width:100%;height:50px;padding-left:60px;background:#fcd454;}
+.pop-wrapper .pop-header .tit {font-size:18px;line-height:50px;}
 .pop-wrapper .pop-header .btn-close {position:absolute;top:0;right:0;width:50px;height:50px;border:none;background:url(/images/btn_close.png) no-repeat center / 25px;font-size:0;}
 .pop-wrapper .pop-content {padding:15px;}
 .post-write-area:after {content:'';display:block;clear:both;}
