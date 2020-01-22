@@ -129,6 +129,10 @@
  
 <script type="text/javascript"> 
     
+    $(document).on("ready",function(){
+        getChatRoomList();
+    });
+    
     const socket = io();
     let num = 0;
     var userInfo = JSON.parse(sessionStorage.getItem("user"));
@@ -181,5 +185,26 @@
     // window.onbeforeunload = function() {
 	//     socket.emit('leaveRoom', userName);
     // }
+
+    function getChatRoomList(){
+        var param = {};
+        transaction(param,{
+            url:"/chat/getChatRoomList.do"
+            ,success : function(result){
+                console.log("채팅방목록",result);
+                getChatRoom(result[0]);
+            }
+        });
+    }
+
+    function getChatRoom(roomInfo){
+        var param = {roomInfo};
+        transaction(param,{
+            url:"/chat/getChatRoom.do"
+            ,success : function(result){
+                console.log("채팅방상세",result);
+            }
+        });
+    }
 
 </script>
