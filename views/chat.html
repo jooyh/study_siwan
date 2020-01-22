@@ -1,19 +1,8 @@
 <script src="/socket.io-client/dist/socket.io.slim.js"></script>
 <div class="chat-list-container">
     <ul class="chat-list">
-        <li>
-            <div class="chat-user-img">
-                <img src="/images/img_user.png" />
-            </div>
-            <div class="chat-user-info">
-                <strong class="chat-user-name">이름이름</strong>
-                <span class="chat-user-msg">마지막 메세지 마지막 메세지</span>
-            </div>
-            <div class="chat-date-box">
-                <span class="date">시간&날짜</span>
-            </div>
-        </li>
-        <li>
+        
+        <!-- <li>
             <div class="chat-user-img">
                 <img src="/images/img_user.png" />
             </div>
@@ -96,7 +85,7 @@
             <div class="chat-date-box">
                 <span class="date">시간&날짜</span>
             </div>
-        </li>
+        </li> -->
     </ul>
     <button id="new-chat-btn"></button>
 </div>
@@ -110,39 +99,34 @@
     $(document).on("click",".chat-list li",function(){
         $("#chat_popup").fadeIn();
     });
+
+    var f_roomInfo;
     const socket = io();
-    let num = 0;
-    var userInfo = JSON.parse(sessionStorage.getItem("user"));
-    var userName = userInfo.user_name;
-    var roomId = new Date().getTime()+"_"+fn_getRandomInt(1000,9999);
+    // let num = 0;
+    // var userInfo = JSON.parse(sessionStorage.getItem("user"));
+    // var userName = userInfo.user_name;
+    // var roomId = new Date().getTime()+"_"+fn_getRandomInt(1000,9999);
 
-    function testSelectUserList(){
-        transaction({searchData:"ag"},{
-            url : "/account/getUserList.do"
-            ,success : function(result){
-                result.unshift(userInfo); // 채팅방 유저 배열 첫번째에 세션 사용자정보 입력
-                var roomInfo = {}
-                roomInfo.room_id = roomId;
-                roomInfo.userList = result;
-                socket.emit("access",roomInfo);
-            }
-        })
-    }
+    // function testSelectUserList(){
+    //     transaction({searchData:"ag"},{
+    //         url : "/account/getUserList.do"
+    //         ,success : function(result){
+    //             result.unshift(userInfo); // 채팅방 유저 배열 첫번째에 세션 사용자정보 입력
+    //             var roomInfo = {}
+    //             roomInfo.room_id = roomId;
+    //             roomInfo.userList = result;
+    //             socket.emit("access",roomInfo);
+    //         }
+    //     })
+    // }
 
-    socket.on('access', ( roomInfo ) => {
-        console.log("access",roomInfo);
-    });
+    // socket.on('access', ( roomInfo ) => {
+    //     console.log("access",roomInfo);
+    // });
 
     // socket.emit("access",{userInfo,roomId});
     // socket.emit('joinRoom',userName,roomId);
 
-    // $('#sendBtn').click(() => {
-    //   socket.emit('chatMessage',userName, $('#content').val());
-    //   $('#content').val('');
-    //   return false;
-
-        
-    // });
 
     // socket.on('chatMessage', ( name, msg, address) => {
     //   $('#messages').append($(`<li class="${userName == name ? "my-msg":"user-msg" }">`).append(`<p class="msg-user">${name}</p><p class="msg-txt">${msg}</p>`));
@@ -169,19 +153,73 @@
             url:"/chat/getChatRoomList.do"
             ,success : function(result){
                 console.log("채팅방목록",result);
-                getChatRoom(result[0]);
+                var html = ``;
+                for(var i in result){
+                    html += `
+                    <li>
+                        <div class="chat-user-img">
+                            <img src="/images/img_user.png" />
+                        </div>
+                        <div class="chat-user-info" onclick="fn_enterChat($(this))" data-room-info='${JSON.stringify(result[i])}' >
+                            <strong class="chat-user-name">${result[i].user_names}</strong>
+                            <span class="chat-user-msg">${result[i].last_msg}</span>
+                        </div>
+                        <div class="chat-date-box">
+                            <span class="date">${result[i].last_msg_dtm}</span>
+                        </div>
+                    </li>
+                    `
+                }
+                $(".chat-list").append(html);
             }
         });
     }
 
-    function getChatRoom(roomInfo){
-        var param = {roomInfo};
-        transaction(param,{
-            url:"/chat/getChatRoom.do"
-            ,success : function(result){
-                console.log("채팅방상세",result);
-            }
-        });
+    function fn_enterChat(el){
+        var roomInfo = JSON.parse(el.attr("data-room-info"))
+        socket.emit('enter',roomInfo);
+        f_roomInfo = roomInfo;
     }
 
+    socket.on('enter', ( msgs ) => {
+        console.log("enter",msgs);
+        var html = ``
+        for(var i in msgs){
+            // <li class="${userName == name ? "my-msg":"user-msg" }">
+            html += `
+                <li class="my-msg">
+                    <p class="msg-user">${msgs[i].user_name}</p><p class="msg-txt">${msgs[i].msg}</p>
+                </li>
+            `        
+        }
+        $("#messages").empty().append(html);
+    });
+
+    
+    function fn_sendMsg(){
+        console.log("TEST");
+        var userInfo = JSON.parse(sessionStorage.getItem("user"));
+        var msgInfo = {}
+        msgInfo.msg = $('#content').val();
+        msgInfo.room_id = f_roomInfo.room_id;
+        msgInfo.user_id = userInfo.user_id;
+
+        socket.emit('sendMsg',msgInfo);
+        $('#content').val('');
+        return false;
+    }
+
+    $(document).on("click","#sendBtn",function(){
+        fn_sendMsg();
+    })
+    socket.on('sendMsg', ( msg ) => {
+        console.log("sendMsg",msg);
+        var html = ``;
+        html += `
+                <li class="my-msg">
+                    <p class="msg-user">${msg.user_name}</p><p class="msg-txt">${msg.msg}</p>
+                </li>
+            `;
+        $("#messages").append(html);
+    });
 </script>

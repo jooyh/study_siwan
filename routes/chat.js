@@ -7,25 +7,37 @@ const code = require('../lib/code.js');
 router.post('/getChatRoomList.do', function(req,res){
     connection.execQuery(
         `
-        select jr.user_id
-             , jr.room_id
-             , jr.alram
-             , jr.reg_id
-             , jr.upd_id
-             , jr.reg_dtm
-             , jr.upd_dtm
-             , (
-                select msg.msg
-                from zoz7184.nb_chat_msg msg
-                where msg.room_id = jr.room_id
-                order by msg.reg_dtm DESC
-                LIMIT 1
-               ) AS last_msg
-          from zoz7184.nb_chat_join_room jr
-         where jr.user_id = ?
-           and jr.use_yn = 1
+        select jr.room_id
+            , jr.alram
+            , jr.reg_id
+            , jr.upd_id
+            , jr.reg_dtm
+            , jr.upd_dtm
+            , group_concat(usr.user_name) as user_names
+            , msg.msg as last_msg
+            , msg.reg_dtm last_msg_dtm
+        from zoz7184.nb_user usr
+            , zoz7184.nb_chat_join_room jr
+        left join ( select m.msg 
+                        , m.reg_dtm
+                        , m.room_id
+                        from zoz7184.nb_chat_msg m
+                        order by reg_dtm DESC
+                        LIMIT 1
+                    ) as msg
+            on jr.room_id = msg.room_id
+        WHERE jr.user_id = usr.user_id
+        and jr.room_id in (
+                                select room_id
+                                from zoz7184.nb_chat_join_room
+                                where user_id = ?
+                            )
+        and jr.use_yn = 1
+        and usr.user_id != ?
+        GROUP by room_id
         `,
-        [req.session.user.user_id]
+        [req.session.user.user_id
+        ,req.session.user.user_id]
         ,function(err,results){
             if(err){
                 res.send(code.resResultObj("ERR_01",err));
@@ -35,43 +47,9 @@ router.post('/getChatRoomList.do', function(req,res){
         }
     );
 });
-
-router.post('/getChatRoom.do', function(req,res){
-    console.log("/getChatRoom.do",req.body)
-    connection.execQuery(
-        `
-        select msg.room_id
-             , msg.chat_content
-             , msg.read_cnt
-             , msg.reg_id
-             , msg.upd_id
-             , msg.reg_dtm
-             , msg.upd_dtm
-             , usr.user_name
-             , usr.user_email
-             , usr.user_id
-          from zoz7184.nb_chat_msg msg
-             , zoz7184.nb_user usr
-         where msg.user_id = usr.user_id
-           and msg.room_id = ?
-           and msg.use_yn = 1
-         order by reg_dtm desc
-        `,
-        [req.body.roomInfo.room_id]
-        ,function(err,results){
-            if(err){
-                res.send(code.resResultObj("ERR_01",err));
-                throw err;
-            }
-            res.send(code.resResultObj("SUCC_01",results));
-        }
-    );
-});
-
 
 /***************************** functions **********************************/
-function insertChatJoinRoom(roomInfo,asyncCb){
-    console.log("insertChatJoinRoom >",roomInfo)
+function insertChatJoinRoom(roomInfo,callback){
     async.forEachOfLimit(roomInfo.userList, 1, function(user, index, cb) {
         connection.execQuery(
             `
@@ -84,7 +62,7 @@ function insertChatJoinRoom(roomInfo,asyncCb){
                   , upd_id
                   , reg_dtm
                   , upd_dtm
-                )values(
+                )values(p
                    ?
                   ,?
                   ,?
@@ -107,12 +85,11 @@ function insertChatJoinRoom(roomInfo,asyncCb){
         );
     },function eachEnd(err){
         if(err) throw err;
-        asyncCb(null,roomInfo);
+        callback(roomInfo);
     });
 }
 
-function createChatRoom(roomInfo,asyncCb,callback){
-    console.log("createChatRoom  >",roomInfo)
+function insertChatRoom(roomInfo,callback){
     connection.execQuery(
         `
             insert into zoz7184.nb_chat_room 
@@ -141,13 +118,12 @@ function createChatRoom(roomInfo,asyncCb,callback){
             if(err){
                 throw err;
             }
-            callback(roomInfo,asyncCb);
+            callback(roomInfo);
         }
     );
 }
 
-function selectChatRoom(roomInfo,asyncCb,callback){
-    console.log("selectChatRoom",roomInfo);
+function selectChatRoom(roomInfo,callback){
     connection.execQuery(
         `
             select count(*) as cnt
@@ -159,81 +135,105 @@ function selectChatRoom(roomInfo,asyncCb,callback){
             if(err){
                 throw err;
             }
-            callback(results[0].cnt,asyncCb);
+            callback(results[0].cnt);
+        }
+    );
+}
+
+//채팅방 상세조회
+function selectChatRoomDtl(roomInfo,cb){
+    connection.execQuery(
+        `
+        select msg.room_id
+             , msg.msg
+             , msg.read_cnt
+             , msg.reg_id
+             , msg.upd_id
+             , msg.reg_dtm
+             , msg.upd_dtm
+             , usr.user_name
+             , usr.user_email
+             , usr.user_id
+          from zoz7184.nb_chat_msg msg
+             , zoz7184.nb_user usr
+         where msg.user_id = usr.user_id
+           and msg.room_id = ?
+           and msg.use_yn = 1
+         order by reg_dtm desc
+        `,
+        [roomInfo.room_id]
+        ,function(err,results){
+            if(err) throw err;
+            cb(results);
+        }
+    );
+}
+
+function insertChatMsg(msgInfo,cb){
+    connection.execQuery(
+        `
+            insert into zoz7184.nb_chat_msg 
+            (
+                room_id
+                , msg
+                , read_cnt
+                , user_id
+                , reg_id
+                , upd_id
+                , reg_dtm
+                , upd_dtm
+            )values(
+                ?
+                ,?
+                ,?
+                ,?
+                ,?
+                ,?
+                ,now()
+                ,now()
+            )
+        `
+        ,[   msgInfo.room_id
+            ,msgInfo.msg
+            ,msgInfo.read_cnt
+            ,msgInfo.user_id
+            ,msgInfo.user_id
+            ,msgInfo.user_id
+        ]
+        ,function(err,results){
+            if(err) throw err
+            cb(results);
         }
     );
 }
 
 var chatFncs = {
-    joinChatRoom : function(roomInfo,cb){
-        try {
-            async.waterfall(
-                [
-                    function task1(callback) { 
-                        console.log("task1 >",roomInfo)
-                        selectChatRoom(roomInfo,callback,function(cnt){
-                            console.log("selectChatRoom .. RESULT >>" , cnt);
-                            if(cnt != 0){ // 기존 방 있음 ( join )
-                                callback(null,roomInfo);
-                            }else{ // 기존방 없음 ( create )
-                                createChatRoom(roomInfo,callback,function(roomInfo,callback){
-                                    insertChatJoinRoom(roomInfo,callback);
-                                });
-                            }
-                        });
-                    },
-                    function final(roomInfo) { 
-                        cb(roomInfo);
-                    }
-                ]
-            );
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+    //채팅방 초대
+    invateChatRoom : function(roomInfo,cb){
+        insertChatJoinRoom(roomInfo,function(){
+            cb(roomInfo);
+        });
     },
-
-    sendMsg : function(msgInfo){
-        connection.execQuery(
-            `
-                insert into zoz7184.nb_chat_msg 
-                (
-                    room_id
-                    , msg
-                    , read_cnt
-                    , user_id
-                    , reg_id
-                    , upd_id
-                    , reg_dtm
-                    , upd_dtm
-                )values(
-                    ?
-                    ,?
-                    ,?
-                    ,?
-                    ,?
-                    ,?
-                    ,now()
-                    ,now()
-                )
-            `
-            ,[   msgInfo.room_id
-                ,msgInfo.msg
-                ,msgInfo.read_cnt
-                ,msgInfo.user_id
-                ,msgInfo.user_id
-                ,msgInfo.user_id
-            ]
-            ,function(err,results){
-                if(err){
-                    res.send(code.resResultObj("ERR_02",err));
-                    throw err;
-                }
-                res.send(code.resResultObj("SUCC_02",results));
-            }
-        );
+    //채팅방 생성
+    createChatRoom : function(roomInfo,cb){
+        insertChatRoom(roomInfo,function(roomInfo){
+            insertChatJoinRoom(roomInfo,function(roomInfo){
+                cb(roomInfo);
+            });
+        });
+    },
+    //채팅방 입장
+    enterChatRoom : function(roomInfo,cb){
+        selectChatRoomDtl(roomInfo,function(roomDtlInfo){
+            cb(roomDtlInfo);
+        })
+    },
+    //메세지 전송
+    sendMsg : function(msgInfo,cb){
+        insertChatMsg(msgInfo,function(results){
+            cb(msgInfo);
+        })
     }
-
 }
 
 router.chatFncs = chatFncs;

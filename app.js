@@ -89,21 +89,41 @@ app.use(function(err, req, res, next) {
 /*** Socket.IO 추가 ***/
 app.io = require('socket.io')();
 app.io.on('connection', function(socket){
-	socket.on("access", function(roomInfo) {
-		console.log("Access",roomInfo)
-		chatRouter.chatFncs.joinChatRoom(roomInfo,function(roomInfo){
-			app.io.emit('access',roomInfo);
-		});
+	//채팅방 생성
+	socket.on("create",function(roomInfo){
+		chatRouter.chatFncs.createChatRoom(roomInfo,function(roomInfo){
+			app.io.emit('invate',roomInfo);
+		})
+	});
 
-		socket.on('sendMsg', function(msgInfo){
-			chatRouter.chatFncs.sendMsg(msgInfo);
+	//채팅방 초대
+	socket.on("invate",function(roomInfo){
+		chatRouter.chatFncs.invateChatRoom(roomInfo,function(roomInfo){
+			app.io.emit('invate',roomInfo);
+		})
+	});
+
+	//채팅방 입장
+	socket.on("enter",function(roomInfo){
+		chatRouter.chatFncs.enterChatRoom(roomInfo,function(roomDtlInfo){
+			app.io.emit('enter',roomDtlInfo);
+		})
+	});
+
+	//채팅방 퇴장
+	socket.on("leave",function(roomInfo){
+		chatRouter.chatFncs.invateChatRoom(roomInfo,function(roomInfo){
+			app.io.emit('leave',roomInfo);
+		})
+	});
+
+	//메세지 전송
+	socket.on("sendMsg",function(msgInfo){
+		chatRouter.chatFncs.sendMsg(msgInfo,function(msgInfo){
 			app.io.emit('sendMsg',msgInfo);
 		});
-		
-		socket.on('leaveRoom', function(roomInfo){
-			app.io.emit('leaveRoom',roomInfo);
-		});
 	});
+
 });
 
 module.exports = app;
