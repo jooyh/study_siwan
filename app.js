@@ -105,8 +105,8 @@ app.io.on('connection', function(socket){
 
 	//채팅방 입장
 	socket.on("enter",function(roomInfo){
-		chatRouter.chatFncs.invateChatRoom(roomInfo,function(roomInfo){
-			app.io.emit('enter',roomInfo);
+		chatRouter.chatFncs.enterChatRoom(roomInfo,function(roomDtlInfo){
+			app.io.emit('enter',roomDtlInfo);
 		})
 	});
 
@@ -115,6 +115,13 @@ app.io.on('connection', function(socket){
 		chatRouter.chatFncs.invateChatRoom(roomInfo,function(roomInfo){
 			app.io.emit('leave',roomInfo);
 		})
+	});
+
+	//메세지 전송
+	socket.on("sendMsg",function(msgInfo){
+		chatRouter.chatFncs.sendMsg(msgInfo,function(msgInfo){
+			app.io.emit('sendMsg',msgInfo);
+		});
 	});
 
 });

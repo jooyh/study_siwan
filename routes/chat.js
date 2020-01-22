@@ -7,25 +7,37 @@ const code = require('../lib/code.js');
 router.post('/getChatRoomList.do', function(req,res){
     connection.execQuery(
         `
-        select jr.user_id
-             , jr.room_id
-             , jr.alram
-             , jr.reg_id
-             , jr.upd_id
-             , jr.reg_dtm
-             , jr.upd_dtm
-             , (
-                select msg.msg
-                from zoz7184.nb_chat_msg msg
-                where msg.room_id = jr.room_id
-                order by msg.reg_dtm DESC
-                LIMIT 1
-               ) AS last_msg
-          from zoz7184.nb_chat_join_room jr
-         where jr.user_id = ?
-           and jr.use_yn = 1
+        select jr.room_id
+            , jr.alram
+            , jr.reg_id
+            , jr.upd_id
+            , jr.reg_dtm
+            , jr.upd_dtm
+            , group_concat(usr.user_name) as user_names
+            , msg.msg as last_msg
+            , msg.reg_dtm last_msg_dtm
+        from zoz7184.nb_user usr
+            , zoz7184.nb_chat_join_room jr
+        left join ( select m.msg 
+                        , m.reg_dtm
+                        , m.room_id
+                        from zoz7184.nb_chat_msg m
+                        order by reg_dtm DESC
+                        LIMIT 1
+                    ) as msg
+            on jr.room_id = msg.room_id
+        WHERE jr.user_id = usr.user_id
+        and jr.room_id in (
+                                select room_id
+                                from zoz7184.nb_chat_join_room
+                                where user_id = ?
+                            )
+        and jr.use_yn = 1
+        and usr.user_id != ?
+        GROUP by room_id
         `,
-        [req.session.user.user_id]
+        [req.session.user.user_id
+        ,req.session.user.user_id]
         ,function(err,results){
             if(err){
                 res.send(code.resResultObj("ERR_01",err));
@@ -149,7 +161,7 @@ function selectChatRoomDtl(roomInfo,cb){
            and msg.use_yn = 1
          order by reg_dtm desc
         `,
-        [room_id]
+        [roomInfo.room_id]
         ,function(err,results){
             if(err) throw err;
             cb(results);
@@ -219,7 +231,7 @@ var chatFncs = {
     //메세지 전송
     sendMsg : function(msgInfo,cb){
         insertChatMsg(msgInfo,function(results){
-            cb(results);
+            cb(msgInfo);
         })
     }
 }
