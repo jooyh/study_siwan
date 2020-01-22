@@ -192,17 +192,6 @@
             url:"/chat/getChatRoomList.do"
             ,success : function(result){
                 console.log("채팅방목록",result);
-                getChatRoom(result[0]);
-            }
-        });
-    }
-
-    function getChatRoom(roomInfo){
-        var param = {roomInfo};
-        transaction(param,{
-            url:"/chat/getChatRoom.do"
-            ,success : function(result){
-                console.log("채팅방상세",result);
             }
         });
     }

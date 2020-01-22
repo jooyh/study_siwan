@@ -23,7 +23,7 @@ function transaction(param,option){
                 if(option.success) option.success(result.data);
             }else{
                 if(result.msg){
-                    alert(result.msg+` (${result.code})`);
+                    alert(`${result.msg} (${result.code})`);
                 }
             }
         }
