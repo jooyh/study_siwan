@@ -51,7 +51,7 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 
 /*** POPUP ***/
 .pop-wrapper {position:fixed;top:0;right:0;bottom:0;left:0;z-index:10000;background:#fff;}
-.pop-wrapper .pop-header {width:100%;height:50px;padding:0 15px;background:#ccc;}
+.pop-wrapper .pop-header {position:relative;width:100%;height:50px;padding-left:60px;background:#ccc;}
 .pop-wrapper .pop-header .tit {font-size:18px;line-height:50px;color:#fff;}
 .pop-wrapper .pop-header .btn-close {position:absolute;top:0;right:0;width:50px;height:50px;border:none;background:url(/images/btn_close.png) no-repeat center / 25px;font-size:0;}
 .pop-wrapper .pop-content {padding:15px;}
@@ -66,13 +66,16 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 .textarea-box .textarea-basic {width:100%;height:150px;margin-top:20px;resize:none;}
 
 /* CHAT */
-/* .chat-container{width:100%;}
-.chat-box{height:60vh;width:100%;}
-.enter-box{height:20vh;width:100%;}
-.enter-box input{height:40px;width:80%}
-.enter-box button{height:40px;width:19%}
-.user-msg {align-items:left;}
-.my-msg {align-items:right;} */
+/*목록*/
+.chat-list li:after {content:'';display:block;clear:both;}
+.chat-list .chat-user-img {float:left;width:80px;height:80px;padding:10px;}
+.chat-list .chat-user-img img {width:100%;height:100%;border:1px solid #ccc;border-radius:20px;}
+.chat-list .chat-user-info {float:left;width:calc(100% - 160px);height:80px;padding:10px;}
+.chat-list .chat-user-info .chat-user-name {display:block;font-size:14px;}
+.chat-list .chat-user-info .chat-user-msg {display:inline-block;width: 100%;height:32px;margin-top:5px;font-size:12px;color:#888;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;white-space:normal;word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.chat-list .chat-date-box {float:left;width:80px;height:80px;padding:10px;}
+.chat-list .chat-date-box .date {font-size:12px;color:#aaa;}
+
 .chat-container {padding:5px 15px 50px;}
 .message-list li:after {content:'';display:block;clear:both;}
 .message-list li {margin-top:10px;}
@@ -80,14 +83,13 @@ nav .bottom-menu .btn-mypage {background-image:url(/images/icon_user_02.png);}
 .message-list .msg-txt {display:inline-block;padding:5px 10px;background:#fff;border:1px solid #333;border-radius:20px;}
 .message-list .my-msg .msg-txt {float:right;border:none;background:#bfab8e;}
 
-.enter-box-area {position:fixed;right:15px;bottom:50px;left:15px;height:50px;background:#fff;}
+.enter-box-area {position:fixed;right:15px;bottom:0;left:15px;height:50px;background:#fff;}
 .enter-box {position:relative;height:35px;}
 .enter-box input {width:100%;height:100%;padding:0 20px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
-
-
-
 
 .btn-send {position:absolute;top:0px;right:5px;width:40px;height:35px;border:none;background:url(/images/icon_send.png) no-repeat center/ 20px;font-size:0;}
 
 .btn-sub-area {margin-top:10px;}
 .btn-add {display:block;min-width:100px;padding:10px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:13px;color: #fff;letter-spacing:2px;}
+
+.btn-back {display:inline-block;position:absolute;left:0;top:0;width:50px;height:50px;border:none;background:url(/images/icon_arrow_left.png) no-repeat center / 25px transparent; font-size:0;}

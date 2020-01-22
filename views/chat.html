@@ -1,22 +1,127 @@
 <script src="/socket.io-client/dist/socket.io.slim.js"></script>
-<!-- <div class="chat-list-container">
-    <div class="chat-list">
-
-
-    </div>
+<div class="chat-list-container">
+    <ul class="chat-list">
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+        <li>
+            <div class="chat-user-img">
+                <img src="/images/img_user.png" />
+            </div>
+            <div class="chat-user-info">
+                <strong class="chat-user-name">이름이름</strong>
+                <span class="chat-user-msg">마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지 마지막 메세지</span>
+            </div>
+            <div class="chat-date-box">
+                <span class="date">시간&날짜</span>
+            </div>
+        </li>
+    </ul>
     <button id="new-chat-btn"></button>
-</div> -->
-<div class="chat-container">
-    <div class="chat-wrap">
-        <div class="chat-box">
-            <ul id="messages" class="message-list">
+</div>
 
-            </ul>
+<div id="post_popup" class="pop-wrapper">
+    <div class="pop-wrap">
+        <div class="pop-header">
+            <button type="button" class="btn-back">뒤로가기</button>
+            <h2 class="tit">개볶치</h2>
+            <!-- <button type="button" class="btn-close">닫기</button> -->
         </div>
-        <div class="enter-box-area">
-            <div class="enter-box">
-                <input type="text" id="content">
-                <button id="sendBtn" class="btn-send">보내기</button>
+        <div class="pop-content">
+            <div class="chat-container">
+                <div class="chat-wrap">
+                    <div class="chat-box">
+                        <ul id="messages" class="message-list">
+                        </ul>
+                    </div>
+                    <div class="enter-box-area">
+                        <div class="enter-box">
+                            <input type="text" id="content">
+                            <button id="sendBtn" class="btn-send">보내기</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
