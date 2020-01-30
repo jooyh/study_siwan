@@ -92,12 +92,24 @@ nav .bottom-menu .btn-chat.active {background-image:url(/images/icon_chat_a.png)
 .enter-box {position:relative;height:35px;}
 .enter-box input {width:100%;height:100%;padding:0 20px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
 
+/**** USER LIST ****/
+.user-list .user-img {display:inline-block;width:50px;height:50px;border:1px solid #333;vertical-align:middle;}
+.user-list .user-img img {width:100%;height:100%;}
+
+/*CHAT*/
+.user-list.chat input[type="radio"] {display:none;}
+.user-list.chat input[type="radio"] + label {display:inline-block;width:100%;height:100%;}
+
+
 .btn-send {position:absolute;top:0px;right:5px;width:40px;height:35px;border:none;background:url(/images/icon_send.png) no-repeat center/ 20px;font-size:0;}
 
 .btn-sub-area {margin-top:10px;}
 .btn-add {display:block;min-width:100px;padding:10px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:13px;color: #fff;letter-spacing:2px;}
 
 .btn-back {display:inline-block;position:absolute;left:0;top:0;width:50px;height:50px;border:none;background:url(/images/icon_arrow_left.png) no-repeat center / 25px transparent; font-size:0;}
+
+.btn-new-chat {display:inline-block;position:fixed;right:15px;bottom:60px;width:50px;height:50px;border:none;border-radius:50%;background:url(/images/icon_chat_plus.png) no-repeat center  / 50px #ccc;font-size:0;}
+
 
 
 i.icon-good {background-image: url(/images/icon_star.png);}

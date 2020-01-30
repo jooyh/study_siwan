@@ -87,7 +87,7 @@
             </div>
         </li> -->
     </ul>
-    <button id="new-chat-btn"></button>
+    <button class="btn-new-chat">새로운채팅</button>
 </div>
 
  
@@ -98,6 +98,9 @@
     });
     $(document).on("click",".chat-list li",function(){
         $("#chat_popup").fadeIn();
+    });
+    $(document).on("click",".btn-new-chat",function(){
+        $("#chat_user_list_popup").fadeIn();
     });
 
     var f_roomInfo;
