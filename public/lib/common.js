@@ -77,10 +77,17 @@ function transaction(param,option){
     });
 }
 
-function gfn_fileTransaction(param,option){
+function fileTransaction(param,option){
+    var formData = new FormData();
+    if(param){
+        for(var key in param){
+            formData.append(key,param[key])
+        } 
+    }
+
     $.ajax({ 
         url: option.url
-        , data: param
+        , data: formData
         , enctype: 'multipart/form-data'
         , processData: false
         , contentType: false
