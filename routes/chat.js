@@ -14,18 +14,22 @@ router.post('/getChatRoomList.do', function(req,res){
             , jr.reg_dtm
             , jr.upd_dtm
             , group_concat(usr.user_name) as user_names
-            , msg.msg as last_msg
-            , msg.reg_dtm last_msg_dtm
+            , (
+            select msg 
+                from zoz7184.nb_chat_msg m
+                where room_id = jr.room_id 
+                order by reg_dtm DESC 
+                LIMIT 1
+            ) as lst_msg
+            , (
+            select reg_dtm 
+                from zoz7184.nb_chat_msg m
+                where room_id = jr.room_id 
+                order by reg_dtm DESC 
+                LIMIT 1
+            ) as lst_dtm
         from zoz7184.nb_user usr
             , zoz7184.nb_chat_join_room jr
-        left join ( select m.msg 
-                        , m.reg_dtm
-                        , m.room_id
-                        from zoz7184.nb_chat_msg m
-                        order by reg_dtm DESC
-                        LIMIT 1
-                    ) as msg
-            on jr.room_id = msg.room_id
         WHERE jr.user_id = usr.user_id
         and jr.room_id in (
                                 select room_id
@@ -34,7 +38,7 @@ router.post('/getChatRoomList.do', function(req,res){
                             )
         and jr.use_yn = 1
         and usr.user_id != ?
-        GROUP by room_id
+        GROUP by jr.room_id
         `,
         [req.session.user.user_id
         ,req.session.user.user_id]
