@@ -1,8 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const multer = require('multer');
+const path = require("path");
 const connection = require('../lib/db.js');
 const code = require('../lib/code.js');
+
+//SET FILE STORAGE
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/upload/')
+    },
+    filename: function (req, file, cb) {
+        var extension = path.extname(file.originalname);
+        cb(null, Date.now() + extension)
+    }
+});
+const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 /* Email 중복체크 */
 router.post('/idcheck.do',function(req,res){
@@ -21,7 +35,8 @@ router.post('/idcheck.do',function(req,res){
 });
 
 /* 회원가입 */
-router.post('/join.do',function(req,res){
+router.post('/join.do',upload.array("atchFile"), function(req,res){
+// router.post('/join.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
     connection.query(
         `insert into zoz7184.nb_user 
@@ -29,6 +44,7 @@ router.post('/join.do',function(req,res){
             ,user_email
             ,user_pw
             ,user_name
+            ,user_prf_img_name
             ,reg_dtm
             ,upd_dtm
         ) values
@@ -36,10 +52,15 @@ router.post('/join.do',function(req,res){
             ,?
             ,?
             ,?
+            ,?
             ,now()
             ,now()
         )`
-        ,[req.body.email,req.body.pw,req.body.name]
+        ,[req.body.email
+            ,req.body.pw
+            ,req.body.name
+            ,req.body.files[0].filename
+        ]
         ,function(err,results,fields){
             console.info("sql",this.sql);
             if(err){
