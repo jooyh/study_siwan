@@ -3,7 +3,9 @@
  * 팝업에서 필요한 공통이벤트는 아래 예시처럼 작성
  * ex) $(document).on("click","#testDiv",function(){
           alert("!");
-       });   
+       });
+       
+       
  */
 function fn_pageInit(){
     // 팝업 뒤로가기 버튼
@@ -33,17 +35,17 @@ function fn_pageInit(){
         } else {
             $(this).addClass("active");
         }
-    });
-    $(document).on("click",".tl-center",function(){ 
-        var iconGood = $(this).next(".tl-bottom").find(".icon-good")
-        if (iconGood.hasClass("active")){
-            iconGood.removeClass("active")
-            $(this).find(".icon-good").remove();
-        } else {
-            $(this).append("<i class='icon-good active'></i>")
-            iconGood.addClass("active")
-        }
-    });
+    });  
+    // $(document).on("click",".tl-center",function(){ 
+    //     var iconGood = $(this).next(".tl-bottom").find(".icon-good")
+    //     if (iconGood.hasClass("active")){
+    //         iconGood.removeClass("active")
+    //         $(this).find(".icon-good").remove();
+    //     } else {
+    //         $(this).append("<i class='icon-good active'></i>")
+    //         iconGood.addClass("active")
+    //     }
+    // });
     // 팝업 엑스버튼 
     // $(document).on("click",".btn-close",function(){
     //     $(this).parents(".pop-wrapper").hide();
