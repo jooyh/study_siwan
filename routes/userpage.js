@@ -17,7 +17,7 @@ router.post('/mypage.do',function(req,res){
                 res.send(code.resResultObj("ERR_01",err));
                 throw err;
             } 
-            res.send(code.resResultObj("SUCC_01",results));
+            res.send(code.resResultObj("SUCC_01",results)); 
         }
     );
 });
