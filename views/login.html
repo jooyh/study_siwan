@@ -1,5 +1,5 @@
 <div id="logo-box" class="login-visual">
-    <button type="button" class="btn-back" onclick="fn_moveLoginPage()">뒤로가기</button>
+    <button type="button" class="btn-back" onclick="fn_moveLoginPage()" style="display:none">뒤로가기</button>
     <!-- <div class="logo"></div> -->
 </div>
 <div id="login-box" class="login-content">
@@ -26,21 +26,23 @@
 </div>
 
 <div id="join-box" class="login-content" style="display:none;">
-    <!-- <div class="profile-sumnail">
+    <div class="profile-sumnail">
         <input type="file" />
         <div class="image"></div>
-    </div> -->
+    </div>
     <div class="login-form-box">
         <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
-                <div class="input-box"> 
-                    <input type="email" name="email" id ="reg-email" doubleCheck = "N" placeholder="E-MAIL"/>
-                    <button type="button" class="btn-clear">입력글 지우기</button>
+                <div class="input-btn-wrap">
+                    <div class="input-box"> 
+                        <input type="email" name="email" id ="reg-email" doubleCheck = "N" placeholder="E-MAIL"/>
+                        <button type="button" class="btn-clear">입력글 지우기</button>
+                    </div>
+                    <div class="btn-area">
+                        <button type="button" class="btn-basic" onclick ="fn_check()">중복확인</button>
+                    </div>
                 </div>
-                <p id="email-notice" style="display:none;"></p>
-                <div class="btn-area type02">
-                    <button type="button" class="btn-basic" onclick ="fn_check()">중복확인</button>
-                </div>
+                <p id="email-notice" class="notice-txt" style="display:none;"></p>
                 <div class="input-box"> 
                     <input type="password" name="pw" id ="reg-pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
@@ -49,7 +51,7 @@
                     <input type="password" name="re_pw" id ="reg-re-pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
-                <p id="pw-notice" style="display:none;">비밀번호가 일치하지 않습니다.</p>
+                <p id="pw-notice" class="notice-txt" style="display:none;">비밀번호가 일치하지 않습니다.</p>
                 <div class="input-box"> 
                     <input type="text" name="name" id="reg-name" placeholder="NAME"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
@@ -109,12 +111,14 @@ function fn_moveJoinPage() {
     document.getElementById("logo-box").classList.add("h-animate");
     document.getElementById("login-box").style.display = "none";
     document.getElementById("join-box").style.display = "block";
+    $(".login-visual .btn-back").show();
 }
 /* 로그인페이지 이동 함수 */
 function fn_moveLoginPage() {
     document.getElementById("logo-box").classList.remove("h-animate");
     document.getElementById("login-box").style.display = "block";
     document.getElementById("join-box").style.display = "none";
+    $(".login-visual .btn-back").hide();
 }
 
 
@@ -163,24 +167,26 @@ function fn_check() {
         url : '/account/idcheck.do'
         ,success : function(result){
             console.log(result);
+            var emailVal = $("#reg-email").val()
              // 중복된 이메일인 경우
             if(result[0].cnt > 0) {
                 $("#reg-email").parent(".input-box").addClass("error");
                 $("#email-notice").show().text("중복된 이메일입니다.");
+                $("#reg-email").attr("doubleCheck","N");
+                // 이메일 형식에 맞지 않는 경우  
+            } else if(emailVal.indexOf("@") == -1) {
+                $("#reg-email").parent(".input-box").addClass("error");
+                $("#email-notice").hide();
+                $("#email-notice").show().text("이메일 형식이 아닙니다.");
+                $("#reg-email").attr("doubleCheck","N");
             // 중복된 이메일이 아닌 경우
             } else { 
                 $("#reg-email").parent(".input-box").removeClass("error");
-                $("#email-notice").show().text("중복확인이 되었습니다.");
-                $("#reg-email").attr("doubleCheck","Y");
-
-            }
-            // 이메일 형식에 맞지 않는 경우  
-            var emailVal = $("#reg-email").val()
-            if(emailVal.indexOf("@") == -1) {
-                $("#reg-email").parent(".input-box").addClass("error");
                 $("#email-notice").hide();
-                $("#email-notice").show().text("이메일이 형식에 맞지 않습니다.??");
+                $("#reg-email").attr("doubleCheck","Y");
+                alert ("중복확인이 되었습니다.");
             }
+            
         }
     });
 
@@ -266,7 +272,6 @@ function fn_inputValCheck() {
             }
             
         }
-
     })
 
     /* 비밀번호 체크 */

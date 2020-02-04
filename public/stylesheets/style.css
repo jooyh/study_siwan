@@ -12,11 +12,17 @@ i {display:inline-block;background-repeat:no-repeat;background-position:center;b
 .container {padding-top:80px;padding-bottom:50px;}
 
 /*** BUTTON ***/
+.btn-area {text-align:center;margin-top:50px;}
+.btn-area.type02 {margin-top:20px;}
+.btn-basic {width:100%;padding:12px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:15px;font-weight:700;color:#fff;letter-spacing:2px;}
 .btn-send {position:absolute;top:0px;right:5px;width:40px;height:35px;border:none;background:url(/images/icon_send.png) no-repeat center/ 20px;font-size:0;}
 .btn-sub-area {margin-top:10px;}
 .btn-add {display:block;min-width:100px;padding:10px;border:none;border-radius:30px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);font-size:13px;color: #fff;letter-spacing:2px;}
 .btn-back {display:inline-block;position:absolute;left:0;top:0;width:50px;height:50px;border:none;background:url(/images/icon_arrow_left.png) no-repeat center / 25px transparent; font-size:0;}
 .btn-new-chat {display:inline-block;position:fixed;right:15px;bottom:60px;width:50px;height:50px;border:none;border-radius:50%;background:url(/images/icon_chat_plus.png) no-repeat center  / 50px #ccc;font-size:0;}
+
+/*** TEXT ***/
+.notice-txt {margin-top:15px;padding-left:20px;background:url(/images/icon_notice.png) no-repeat left / 15px;font-size:12px;color:#aaa;}
 
 /*** ICON ***/
 i.icon-good {background-image: url(/images/icon_star.png);}
