@@ -38,7 +38,7 @@ router.post('/idcheck.do',function(req,res){
 router.post('/join.do',upload.array("atchFile"), function(req,res){
 // router.post('/join.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
-    connection.query(
+    connection.query( 
         `insert into zoz7184.nb_user 
         (    user_id
             ,user_email
