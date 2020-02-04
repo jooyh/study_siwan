@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 /**** INIT ****/
-* {margin:0;padding:0;box-sizing:border-box;outline:none;color:#444;}
+* {margin:0;padding:0;box-sizing:border-box;color:#444;}
 a {text-decoration:none;color:#444;}
 ::placeholder {color:#aaa;}
 strong {font-weight:700;}
