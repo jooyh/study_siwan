@@ -26,10 +26,10 @@
 </div>
 
 <div id="join-box" class="login-content" style="display:none;">
-    <div class="profile-sumnail">
+    <!-- <div class="profile-sumnail">
         <input type="file" />
         <div class="image"></div>
-    </div>
+    </div> -->
     <div class="login-form-box">
         <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
@@ -117,22 +117,6 @@ function fn_moveLoginPage() {
     document.getElementById("join-box").style.display = "none";
 }
 
-/* 비밀번호 포커스아웃 이벤트 */
-$("#reg-re-pw").focusout(function(){
-    var pwVal = $("#reg-pw").val();
-    var rePwVal = $("#reg-re-pw").val();
-    $("#pw-notice").hide();
-    if(pwVal != rePwVal) {
-        // alert("비밀번호가 일치하지않습니다.");
-        $("#pw-notice").show();
-        $("#reg-re-pw").parent().addClass("error");
-        $("#reg-pw").parent().addClass("error");
-    } else {
-        $("#reg-re-pw").parent().removeClass("error");
-        $("#reg-pw").parent().removeClass("error");
-    }
-})
-
 
 function fn_login () {
     var emailVal = document.getElementById("login_email").value;
@@ -217,7 +201,8 @@ function fn_check() {
 }
 
 function fn_join() {
-    fn_inputValCheck();
+    
+     if(!fn_inputValCheck()) return;
     console.log('$("#join-box input").hasClass("error"): ', $("#join-box input").parent().hasClass("error"));
     var pwVal = document.getElementById("reg-pw").value;
     var rePwVal = document.getElementById("reg-re-pw").value;
@@ -226,19 +211,10 @@ function fn_join() {
     userInfo.pw = rePwVal;
     userInfo.name = document.getElementsByName("name")[0].value;
     console.log('userInfo: ', userInfo);
-<<<<<<< HEAD
     if($("#join-box input").parent().hasClass("error")) {
         return
     } 
     transaction(userInfo,{
-=======
-    if(pwVal != rePwVal) {
-        alert("비밀번호가 일치하지않습니다."); 
-        return;
-    }
-
-    transaction(loginData,{
->>>>>>> b1227b06628bc412275f4495287b33edc5bf50c5
         url : '/account/join.do'
         ,success : function(result){
             alert("회원가입이 완료되었습니다.");
@@ -269,23 +245,46 @@ function fn_join() {
     // });
 }
 function fn_inputValCheck() {
+    var flag = true;
     $("#join-box input").each(function(i, el){
+        // 값이 없을 때 
         if($(el).val() == "") {
+            console.log('$(el): ', $(el));
+            console.log('$(el).parent: ', $(el).parent());
             $(el).parent(".input-box").addClass("error");
-            if ($(this).attr("id") == "reg-pw" || $(this).attr("id") == "reg-re-pw" ) {
-                alert ("비밀번호를 입력해 주세요");
-                return
-            } 
+            // alert (`${$(el).attr("title")} 을(를) 입력해 주세요`);
+            flag = false;
+        // 값이 있을 때 
         } else {
-            $(el).parent(".input-box").removeClass("error");
-            if( $("#reg-email").attr("doubleCheck") != "Y") {
+            // 값이 있지만 이메일중복체크를 안한경우
+            if( $(el).attr("id") == "reg-email" && $(el).attr("doubleCheck") != "Y") {
                 $(el).parent(".input-box").addClass("error");
-                alert ("이메일 중복체크를 해주세요")
+                // alert ("이메일 중복체크를 해주세요");
+                flag = false;
+            } else {
+                $(el).parent(".input-box").removeClass("error");
             }
-
             
         }
+
     })
+
+    /* 비밀번호 체크 */
+    var pwVal = $("#reg-pw").val();
+    var rePwVal = $("#reg-re-pw").val();
+    $("#pw-notice").hide();
+    if((!pwVal || !rePwVal) || pwVal != rePwVal) {
+        // alert("비밀번호가 일치하지않습니다.");
+        $("#pw-notice").show();
+        $("#reg-re-pw").parent().addClass("error");
+        $("#reg-pw").parent().addClass("error");
+        flag = false;
+    } else {
+        $("#reg-re-pw").parent().removeClass("error");
+        $("#reg-pw").parent().removeClass("error");
+    }
+
+    return flag;
 }
 
 
