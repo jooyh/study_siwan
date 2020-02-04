@@ -9,8 +9,8 @@ const code = require('../lib/code.js');
 /* 마이페이지 불러오기 */
 router.post('/mypage.do',function(req,res){
     connection.query(
-        `select count(*) as cnt from zoz7184.nb_user where user_email = ?`
-        ,[req.body.email]
+        `?`
+        ,[req.body.id]
         ,function(err,results,fields){
             console.info("sql",this.sql);
             if(err){
