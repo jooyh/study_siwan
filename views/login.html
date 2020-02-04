@@ -34,11 +34,12 @@
         <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
                 <div class="input-box"> 
-                    <input type="email" name="email" id ="reg-email" placeholder="E-MAIL"/>
+                    <input type="email" name="email" id ="reg-email" doubleCheck = "N" placeholder="E-MAIL"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
-                <div class="btn-area02">
-                    <button type="button" class="btn-basic" onclick = "fn_check()">중복확인</button>
+                <p id="email-notice" style="display:none;"></p>
+                <div class="btn-area type02">
+                    <button type="button" class="btn-basic" onclick ="fn_check()">중복확인</button>
                 </div>
                 <div class="input-box"> 
                     <input type="password" name="pw" id ="reg-pw" placeholder="PASS"/>
@@ -48,9 +49,9 @@
                     <input type="password" name="re_pw" id ="reg-re-pw" placeholder="PASS"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
-                <!-- <p id="pw-notice">비밀번호가 일치하지 않습니다.</p> -->
+                <p id="pw-notice" style="display:none;">비밀번호가 일치하지 않습니다.</p>
                 <div class="input-box"> 
-                    <input type="text" name="name" placeholder="NAME"/>
+                    <input type="text" name="name" id="reg-name" placeholder="NAME"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="check-agree">
@@ -87,6 +88,17 @@ for (var i = 0; i < inputBox.length; i++) {
     })
 }
 
+var inputBox = document.getElementsByClassName("input-box");
+var input;
+for (var i = 0; i < inputBox.length; i++) {
+    input = inputBox[i].getElementsByTagName("input")[0];
+    input.addEventListener('input', function(){
+        if(event.target.value) {
+            event.target.nextElementSibling.style.display = "block";
+        }
+    })
+}
+
 /* 헤더, 네비 제거 */
 document.getElementsByTagName("header")[0].style.display = "none";
 document.getElementsByTagName("nav")[0].style.display = "none";
@@ -105,16 +117,22 @@ function fn_moveLoginPage() {
     document.getElementById("join-box").style.display = "none";
 }
 
-var inputBox = document.getElementsByClassName("input-box");
-var input;
-for (var i = 0; i < inputBox.length; i++) {
-    input = inputBox[i].getElementsByTagName("input")[0];
-    input.addEventListener('input', function(){
-        if(event.target.value) {
-            event.target.nextElementSibling.style.display = "block";
-        }
-    })
-}
+/* 비밀번호 포커스아웃 이벤트 */
+$("#reg-re-pw").focusout(function(){
+    var pwVal = $("#reg-pw").val();
+    var rePwVal = $("#reg-re-pw").val();
+    $("#pw-notice").hide();
+    if(pwVal != rePwVal) {
+        // alert("비밀번호가 일치하지않습니다.");
+        $("#pw-notice").show();
+        $("#reg-re-pw").parent().addClass("error");
+        $("#reg-pw").parent().addClass("error");
+    } else {
+        $("#reg-re-pw").parent().removeClass("error");
+        $("#reg-pw").parent().removeClass("error");
+    }
+})
+
 
 function fn_login () {
     var emailVal = document.getElementById("login_email").value;
@@ -125,6 +143,7 @@ function fn_login () {
     transaction(loginData,{
         url : '/account/login.do'
         ,success : function(result){
+            console.log('login_result: ', result);
             sessionStorage.setItem("user",JSON.stringify(result[0]));
             location.href='/timeline';
         }
@@ -156,23 +175,50 @@ function fn_check() {
     var input = document.getElementById("reg-email");
     var data = {};
     data.email = input.value;
-    $.ajax({
+    transaction(data,{
         url : '/account/idcheck.do'
-        ,type:'post'
-        // ,contentType: 'application/json'
-        // ,data : JSON.stringify(data)
-        ,data : data
         ,success : function(result){
-            console.log(result.cnt);
-            if(result.cnt > 0) alert("중복된 이메일 입니다.");
-        }
-        ,error : function(e){
-            alert("시스템 오류가 발생했습니다.");
+            console.log(result);
+             // 중복된 이메일인 경우
+            if(result[0].cnt > 0) {
+                $("#reg-email").parent(".input-box").addClass("error");
+                $("#email-notice").show().text("중복된 이메일입니다.");
+            // 중복된 이메일이 아닌 경우
+            } else { 
+                $("#reg-email").parent(".input-box").removeClass("error");
+                $("#email-notice").show().text("중복확인이 되었습니다.");
+                $("#reg-email").attr("doubleCheck","Y");
+
+            }
+            // 이메일 형식에 맞지 않는 경우  
+            var emailVal = $("#reg-email").val()
+            if(emailVal.indexOf("@") == -1) {
+                $("#reg-email").parent(".input-box").addClass("error");
+                $("#email-notice").hide();
+                $("#email-notice").show().text("이메일이 형식에 맞지 않습니다.??");
+            }
         }
     });
+
+    // $.ajax({
+    //     url : '/account/idcheck.do'
+    //     ,type:'post'
+    //     // ,contentType: 'application/json's
+    //     // ,data : JSON.stringify(data)
+    //     ,data : data
+    //     ,success : function(result){
+    //         console.log(result.cnt);
+    //         if(result.cnt > 0) alert("중복된 이메일 입니다.");
+    //     }
+    //     ,error : function(e){
+    //         alert("시스템 오류가 발생했습니다.");
+    //     }
+    // });
 }
 
 function fn_join() {
+    fn_inputValCheck();
+    console.log('$("#join-box input").hasClass("error"): ', $("#join-box input").parent().hasClass("error"));
     var pwVal = document.getElementById("reg-pw").value;
     var rePwVal = document.getElementById("reg-re-pw").value;
     var userInfo = {};
@@ -180,18 +226,18 @@ function fn_join() {
     userInfo.pw = rePwVal;
     userInfo.name = document.getElementsByName("name")[0].value;
     console.log('userInfo: ', userInfo);
-    if(pwVal != rePwVal) {
-        alert("비밀번호가 일치하지않습니다.");
-        return;
-    }
-
-    transaction(loginData,{
+    if($("#join-box input").parent().hasClass("error")) {
+        return
+    } 
+    transaction(userInfo,{
         url : '/account/join.do'
         ,success : function(result){
             alert("회원가입이 완료되었습니다.");
             fn_moveLoginPage();
+            
         }
     });
+   
 
     // $.ajax({
     //     url : '/account/join.do'
@@ -213,5 +259,25 @@ function fn_join() {
     //     }
     // });
 }
+function fn_inputValCheck() {
+    $("#join-box input").each(function(i, el){
+        if($(el).val() == "") {
+            $(el).parent(".input-box").addClass("error");
+            if ($(this).attr("id") == "reg-pw" || $(this).attr("id") == "reg-re-pw" ) {
+                alert ("비밀번호를 입력해 주세요");
+                return
+            } 
+        } else {
+            $(el).parent(".input-box").removeClass("error");
+            if( $("#reg-email").attr("doubleCheck") != "Y") {
+                $(el).parent(".input-box").addClass("error");
+                alert ("이메일 중복체크를 해주세요")
+            }
+
+            
+        }
+    })
+}
+
 
 </script>
