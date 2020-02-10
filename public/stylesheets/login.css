@@ -2,7 +2,6 @@
 
 /***  LOGIN  ***/
 .login-visual {width:100%;height:200px;background:linear-gradient(109.8deg, rgba(255,189,55,1) 5.6%, rgba(250,111,152,1) 91.5%);transition:height .5s;}
-/* .login-visual .btn-back {display:none;width:30px;height:30px;border:0;background:green;font-size:0;} */
 
 .login-content {width:90%;margin:0 auto;}
 .login-content .login-tit {margin-top:10px;font-size:60px;font-weight:700;}
@@ -12,7 +11,6 @@
 .login-content .login-form-box .input-box input {width:100%;height:100%;padding:0 20px;border:none;border-radius:25px;box-shadow:0 0 15px #ccc;}
 .login-content .login-form-box .input-box.error input {box-shadow: 0 0 15px rgb(219, 20, 20);}
 .login-content .login-form-box .input-box .btn-clear {display:none;position:absolute;top:0;right:5px;width:45px;height:45px;border:none;background:url(/images/btn_input_clear.png) no-repeat center / 20px;font-size:0;}
-/* .login-content .login-form-box .input-btn-wrap:after {content:'';display:block;clear:both;} */
 .login-content .login-form-box .input-btn-wrap {display:table;width:100%;}
 .login-content .login-form-box .input-btn-wrap .input-box {display:table-cell;margin-top:0;}
 .login-content .login-form-box .input-btn-wrap .btn-area {display:table-cell;margin-top:0;padding-left:15px;vertical-align:top;}
@@ -21,14 +19,15 @@
 .login-content .login-form-box .join {margin-top:10px;text-align:right;}
 .login-content .login-form-box .join a {font-size:15px;color:#999;}
 
-
 /***  JOIN  ***/
 .login-visual.h-animate {height:120px;}
 .login-visual.h-animate .btn-back {display:inline-block;}
 
-.login-content .profile-sumnail {position:relative;width:100px;height:100px;margin:0 auto;margin-top:-50px;background:#333;border-radius:50%;}
-.login-content .profile-sumnail:after {content:'';position:absolute;right:5px;bottom:0;width:20px;height:20px;background:#000;border-radius:50%;}
-.login-content .profile-sumnail input[type="file"] {width:100%;height:100%;opacity:0;}
+.login-content .profile-sumnail {position:relative;width:100px;height:100px;margin:0 auto;margin-top:-50px;}
+.login-content .profile-sumnail:after {content:'';position:absolute;right:5px;bottom:0;width:20px;height:20px;background:url(/images/icon_plus.png) no-repeat #ccc;background-size:cover;border-radius:50%;}
+.login-content .profile-sumnail input[type="file"] {position:relative;z-index:10;width:100%;height:100%;opacity:0;}
+.login-content .profile-sumnail .image-box {position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%;background:#fff;}
+.login-content .profile-sumnail .image-box img {width:100%;height:100%;}
 
 .check-agree {margin-top:15px;}
 .check-agree input[type="checkbox"] {display:none;}

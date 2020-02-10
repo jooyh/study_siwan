@@ -36,6 +36,15 @@ function fn_pageInit(){
             $(this).addClass("active");
         }
     });  
+
+    // 사용자 페이지 리스트 height style  (확인 필요)
+    var postListWidth  = $(".user-post-list li").width();
+    $(".user-post-list li").css("height",postListWidth);
+    
+    $(window).resize(function() {
+        var postListWidth  = $(".user-post-list li").width();
+        $(".user-post-list li").css("height",postListWidth);
+    })
     // $(document).on("click",".tl-center",function(){ 
     //     var iconGood = $(this).next(".tl-bottom").find(".icon-good")
     //     if (iconGood.hasClass("active")){
@@ -51,6 +60,8 @@ function fn_pageInit(){
     //     $(this).parents(".pop-wrapper").hide();
     // });
 }
+
+
 
 function transaction(param,option){
     $.ajax({

@@ -28,14 +28,16 @@
 <div id="join-box" class="login-content" style="display:none;">
     <div class="profile-sumnail">
         <input type="file" />
-        <div class="image"></div>
+        <div class="image-box">
+            <img src="/images/img_user.png" alt="프로필">
+        </div>
     </div>
     <div class="login-form-box">
         <!-- <form action="/login" method="POST"> -->
             <div class="login-area">
                 <div class="input-btn-wrap">
                     <div class="input-box"> 
-                        <input type="email" name="email" id ="reg-email" doubleCheck = "N" placeholder="E-MAIL"/>
+                        <input type="email" name="email" id ="reg-email" doubleCheck = "N" placeholder="E-MAIL" title="이메일"/>
                         <button type="button" class="btn-clear">입력글 지우기</button>
                     </div>
                     <div class="btn-area">
@@ -44,16 +46,16 @@
                 </div>
                 <p id="email-notice" class="notice-txt" style="display:none;"></p>
                 <div class="input-box"> 
-                    <input type="password" name="pw" id ="reg-pw" placeholder="PASS"/>
+                    <input type="password" name="pw" id ="reg-pw" placeholder="PASS" title="비밀번호"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="input-box"> 
-                    <input type="password" name="re_pw" id ="reg-re-pw" placeholder="PASS"/>
+                    <input type="password" name="re_pw" id ="reg-re-pw" placeholder="PASS" title="비밀번호"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
-                <p id="pw-notice" class="notice-txt" style="display:none;">비밀번호가 일치하지 않습니다.</p>
+                <p id="pw-notice" class="notice-txt" style="display:none;"></p>
                 <div class="input-box"> 
-                    <input type="text" name="name" id="reg-name" placeholder="NAME"/>
+                    <input type="text" name="name" id="reg-name" placeholder="NAME" title="닉네임"/>
                     <button type="button" class="btn-clear">입력글 지우기</button>
                 </div>
                 <div class="check-agree">
@@ -121,7 +123,6 @@ function fn_moveLoginPage() {
     $(".login-visual .btn-back").hide();
 }
 
-
 function fn_login () {
     var emailVal = document.getElementById("login_email").value;
     var pwVal = document.getElementById("login_pw").value;
@@ -186,7 +187,6 @@ function fn_check() {
                 $("#reg-email").attr("doubleCheck","Y");
                 alert ("중복확인이 되었습니다.");
             }
-            
         }
     });
 
@@ -207,9 +207,7 @@ function fn_check() {
 }
 
 function fn_join() {
-    
      if(!fn_inputValCheck()) return;
-    console.log('$("#join-box input").hasClass("error"): ', $("#join-box input").parent().hasClass("error"));
     var pwVal = document.getElementById("reg-pw").value;
     var rePwVal = document.getElementById("reg-re-pw").value;
     var userInfo = {};
@@ -225,7 +223,6 @@ function fn_join() {
         ,success : function(result){
             alert("회원가입이 완료되었습니다.");
             fn_moveLoginPage();
-            
         }
     });
    
@@ -252,38 +249,45 @@ function fn_join() {
 }
 function fn_inputValCheck() {
     var flag = true;
-    $("#join-box input").each(function(i, el){
-        // 값이 없을 때 
+    var input = $("#join-box input").not("input[type='file']")
+    input.each(function(i, el){
+        // input에 값이 없을 때 
         if($(el).val() == "") {
-            console.log('$(el): ', $(el));
-            console.log('$(el).parent: ', $(el).parent());
             $(el).parent(".input-box").addClass("error");
-            // alert (`${$(el).attr("title")} 을(를) 입력해 주세요`);
+            alert (`${$(el).attr("title")} 을(를) 입력해 주세요`);
             flag = false;
-        // 값이 있을 때 
+        // input에 값이 있을 때 
         } else {
             // 값이 있지만 이메일중복체크를 안한경우
             if( $(el).attr("id") == "reg-email" && $(el).attr("doubleCheck") != "Y") {
                 $(el).parent(".input-box").addClass("error");
                 // alert ("이메일 중복체크를 해주세요");
+                $("#email-notice").show().text("중복 체크를 해주세요");
                 flag = false;
             } else {
                 $(el).parent(".input-box").removeClass("error");
             }
-            
         }
     })
 
-    /* 비밀번호 체크 */
+    /* 비밀번호 두입력란이 일치 한지, 조건에 맞는지 확인 */
     var pwVal = $("#reg-pw").val();
     var rePwVal = $("#reg-re-pw").val();
+    var pwcheck = /^[a-zA-Z0-9]{6,15}$/;
     $("#pw-notice").hide();
+    // 값이 없거나 두 입력란이 일치하지 않는 경우
     if((!pwVal || !rePwVal) || pwVal != rePwVal) {
-        // alert("비밀번호가 일치하지않습니다.");
-        $("#pw-notice").show();
+        $("#pw-notice").show().text("비밀번호가 일치하지 않습니다.");
         $("#reg-re-pw").parent().addClass("error");
         $("#reg-pw").parent().addClass("error");
         flag = false;
+    // 비밀번호 조건에 맞지 않는 경우
+    } else if(!pwcheck.test(pwVal)) {
+        $("#pw-notice").show().text("비밀번호는 숫자, 영문 조합으로 6~15자리를 사용해야 합니다.");
+        $("#reg-re-pw").parent().addClass("error");
+        $("#reg-pw").parent().addClass("error");
+        return false;
+    // 두 입력란에 값이 있고 일치하고 조건에 맞는 경우
     } else {
         $("#reg-re-pw").parent().removeClass("error");
         $("#reg-pw").parent().removeClass("error");
