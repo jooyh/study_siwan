@@ -68,3 +68,20 @@
 
 
 </div>
+
+<script type="text/javascript">
+    fn_getUserPage();
+
+    function fn_getUserPage() {
+        var input = document.getElementById("reg-email");
+        var data = {};
+        //data.id = input.value;
+        data.id = "1";
+        transaction(data,{
+            url : '/userpage/getUserPage.do'
+            ,success : function(result){
+                console.log(result);
+            }
+        });
+    }
+</script>
