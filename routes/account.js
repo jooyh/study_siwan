@@ -21,7 +21,7 @@ const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }
 /* Email 중복체크 */
 router.post('/idcheck.do',function(req,res){
     connection.query(
-        `select count(*) as cnt from zoz7184.nb_user where user_email = ?`
+        `select count(*) as cnt from zoz7184.NB_USER where user_email = ?`
         ,[req.body.email]
         ,function(err,results,fields){
             console.info("sql",this.sql);
@@ -39,7 +39,7 @@ router.post('/join.do',upload.array("atchFile"), function(req,res){
 // router.post('/join.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
     connection.query( 
-        `insert into zoz7184.nb_user 
+        `insert into zoz7184.NB_USER 
         (    user_id
             ,user_email
             ,user_pw
@@ -80,7 +80,7 @@ router.post('/login.do',function(req,res){
                ,user_name
                ,user_email
                ,user_status
-           from zoz7184.nb_user 
+           from zoz7184.NB_USER 
           where user_email = ? 
             and user_pw = ?`
         ,[req.body.email,req.body.pw ]
@@ -149,7 +149,7 @@ function selectUserInfo(req,res,cb,cb2,sqlType){
                ,user_name
                ,user_email
                ,user_status
-           from zoz7184.nb_user 
+           from zoz7184.NB_USER 
           where user_email = ? 
             ${sqlType == 'follow' ? 'and user_email != ? ' : ''}
         `
@@ -225,7 +225,7 @@ function selectUserList(searchData,cb){
         `select user_id
               , user_email
               , user_name
-           from zoz7184.nb_user
+           from zoz7184.NB_USER
           where user_email like CONCAT('%',?,'%')
              or user_name like CONCAT('%',?,'%')
         `

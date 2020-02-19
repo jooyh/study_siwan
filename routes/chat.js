@@ -16,24 +16,24 @@ router.post('/getChatRoomList.do', function(req,res){
             , group_concat(usr.user_name) as user_names
             , (
             select msg 
-                from zoz7184.nb_chat_msg m
+                from zoz7184.NB_CHAT_MSG m
                 where room_id = jr.room_id 
                 order by reg_dtm DESC 
                 LIMIT 1
             ) as lst_msg
             , (
             select reg_dtm 
-                from zoz7184.nb_chat_msg m
+                from zoz7184.NB_CHAT_MSG m
                 where room_id = jr.room_id 
                 order by reg_dtm DESC 
                 LIMIT 1
             ) as lst_dtm
-        from zoz7184.nb_user usr
-            , zoz7184.nb_chat_join_room jr
+        from zoz7184.NB_USER usr
+            , zoz7184.NB_CHAT_JOIN_ROOM jr
         WHERE jr.user_id = usr.user_id
         and jr.room_id in (
                                 select room_id
-                                from zoz7184.nb_chat_join_room
+                                from zoz7184.NB_CHAT_JOIN_ROOM
                                 where user_id = ?
                             )
         and jr.use_yn = 1
@@ -57,7 +57,7 @@ function insertChatJoinRoom(roomInfo,callback){
     async.forEachOfLimit(roomInfo.userList, 1, function(user, index, cb) {
         connection.execQuery(
             `
-                insert into zoz7184.nb_chat_join_room 
+                insert into zoz7184.NB_CHAT_JOIN_ROOM 
                 (
                     room_id
                   , alram
@@ -96,7 +96,7 @@ function insertChatJoinRoom(roomInfo,callback){
 function insertChatRoom(roomInfo,callback){
     connection.execQuery(
         `
-            insert into zoz7184.nb_chat_room 
+            insert into zoz7184.NB_CHAT_ROOM 
             (
                 room_id
               , room_name
@@ -131,7 +131,7 @@ function selectChatRoom(roomInfo,callback){
     connection.execQuery(
         `
             select count(*) as cnt
-              from zoz7184.nb_chat_room 
+              from zoz7184.NB_CHAT_ROOM 
              where room_id = ?
         `
         ,[ roomInfo.room_id ]
@@ -158,8 +158,8 @@ function selectChatRoomDtl(roomInfo,cb){
              , usr.user_name
              , usr.user_email
              , usr.user_id
-          from zoz7184.nb_chat_msg msg
-             , zoz7184.nb_user usr
+          from zoz7184.NB_CHAT_MSG msg
+             , zoz7184.NB_USER usr
          where msg.user_id = usr.user_id
            and msg.room_id = ?
            and msg.use_yn = 1
@@ -176,7 +176,7 @@ function selectChatRoomDtl(roomInfo,cb){
 function insertChatMsg(msgInfo,cb){
     connection.execQuery(
         `
-            insert into zoz7184.nb_chat_msg 
+            insert into zoz7184.NB_CHAT_MSG 
             (
                 room_id
                 , msg
@@ -220,8 +220,8 @@ function selectChatMsg(msgId,cb){
             , m.read_cnt
             , m.reg_dtm
             , u.user_name
-        from zoz7184.nb_chat_msg m
-            , zoz7184.nb_user u
+        from zoz7184.NB_CHAT_MSG m
+            , zoz7184.NB_USER u
         where m.user_id = u.user_id
         and m.chat_id = ?`
         ,[msgId]

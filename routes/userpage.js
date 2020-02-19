@@ -15,7 +15,7 @@ router.post('/getUserPage.do',function(req,res){
               , (select count(*) from zoz7184.nb_follow where follow_req_id=?) follow_req_cnt
               , (select count(*) from zoz7184.nb_follow where follow_res_id=?) follow_res_cnt
               , A.user_content
-           from zoz7184.nb_user A
+           from zoz7184.NB_USER A
           where A.user_id = ?`
         ,[req.body.id
             , req.body.id
