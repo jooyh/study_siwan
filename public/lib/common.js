@@ -70,7 +70,7 @@ function transaction(param,option){
         ,data : param ? param : {}
         ,timeout:100000
         ,success : function(result){
-            console.log(option.url , result);
+            //console.log(option.url , result);
             if(result.code.search("SUCC") != -1){
                 if(option.success) option.success(result.data);
             }else{
@@ -83,7 +83,7 @@ function transaction(param,option){
             alert("시스템 오류가 발생했습니다.");
         }
         ,beforeSend:function(){
-            console.log("param ...",param);
+            //console.log("param ...",param);
         }
         ,complete:function(){
         }
@@ -106,7 +106,7 @@ function fileTransaction(param,option){
         , contentType: false
         , type: 'POST'
         , success: function(result){ 
-            console.log(url , result);
+            //console.log(url , result);
             if(result.code.search("SUCC") != -1){
                 option.success(result.data);
             }else{
@@ -156,7 +156,7 @@ function testLike(){
     transaction(param,{
         url : "/post/likePost.do"
         ,success : function(result){
-            console.log(result);
+            //console.log(result);
         }
     });
 }

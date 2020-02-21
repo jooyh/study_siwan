@@ -1,40 +1,4 @@
 <div class="tl-item-wrapper">
-    
-    <!-- <div class="tl-item-wrap">
-        <div class="tl-item-box">
-            <div class="tl-top">
-                <a href="#">
-                    <div class="user-profile-img">
-                        <img src ="/images/images_user.png" alt="유그미프로필사진"/>
-                    </div>
-                    <p class="user-info">yougmi</p>
-                </a>
-            </div>
-            <div class="tl-center">
-                <img alt="-"/>
-            </div>
-            <div class="tl-bottom">
-                <div class="icon-box">
-                    <i class="icon-good"></i>
-                    <i class="icon-comment"></i>
-                </div>
-                <p class="info-txt"><strong>개볶치</strong>님이 좋아합니다.</p>
-                <p class="info-txt"><strong>개볶치</strong>님 외 <strong><span>5<span>명</strong>이 좋아합니다.</p>
-                <div class="info-writing-box">
-                    <strong>yougmi</strong>
-                    <p class="info-txt">귀염뽀짝 트윈룩 코디 멜빵바지</p>
-                    <button type="button" class="btn-more">더보기</button>
-                </div>
-                <div class="user-comment-inputbox">
-                    <div class="profile-img">
-                        <img alt="-" />
-                    </div>
-                    <input type="text" placeholder="댓글달기..."/>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
 </div>
 
 <script>
@@ -48,31 +12,19 @@ function getPostList(){
             mkList(result);
         }
     });
-    // $.ajax({
-    //     url : '/post/getpostlist.do'
-    //     ,type:'post'
-    //     ,contentType: 'application/json'
-    //     ,data : JSON.stringify({})
-    //     ,success : function(result){
-    //         console.log(result);
-    //         mkList(result)
-    //     }
-    //     ,error : function(e){
-    //         alert("시스템 오류가 발생했습니다.");
-    //     }
-    // });
 }
 
 function mkList(list) {
-    console.log(list);
     html = ``;
     for (var i in list) {
         var fileHtml = ``;
+        console.log("list",list[i]);
         for(var j in list[i].fileArr){
             var file = list[i].fileArr[j];
+            console.log("file",file);
             fileHtml += `
                 <div class="tl-center">
-                    <img alt="-" src=/upload/${file.file_snm}>
+                    <img alt="-" src=/upload/${file.fileSnm}>
                 </div>
             `;
         }
@@ -92,7 +44,7 @@ function mkList(list) {
                             <div class="user-profile-img">
                                 <img src ="/images/img_user.png" alt="유그미프로필사진"/>
                             </div>
-                            <p class="user-info">${list[i].user_name} test </p>
+                            <p class="user-info">${list[i].userName} test </p>
                         </a>
                     </div>
                     ${fileHtml}
@@ -102,8 +54,8 @@ function mkList(list) {
                             <i class="icon-comment"></i>
                         </div>
                         <div class="info-writing-box">
-                            <strong>${list[i].user_name}</strong>
-                            <p class="info-txt">${list[i].post_content}</p>
+                            <strong>${list[i].userName}</strong>
+                            <p class="info-txt">${list[i].postContent}</p>
                             <button type="button" class="btn-more">더보기</button>
                         </div>
                         <div class="user-comment-inputbox">

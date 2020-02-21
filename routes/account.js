@@ -21,7 +21,9 @@ const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }
 /* Email 중복체크 */
 router.post('/idcheck.do',function(req,res){
     connection.query(
-        `select count(*) as cnt from zoz7184.NB_USER where user_email = ?`
+        `SELECT COUNT(*) AS cnt 
+           FROM zoz7184.NB_USER 
+          WHERE USER_EMAIL = ?`
         ,[req.body.email]
         ,function(err,results,fields){
             console.info("sql",this.sql);
@@ -39,22 +41,22 @@ router.post('/join.do',upload.array("atchFile"), function(req,res){
 // router.post('/join.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
     connection.query( 
-        `insert into zoz7184.NB_USER 
-        (    user_id
-            ,user_email
-            ,user_pw
-            ,user_name
-            ,user_prf_img_name
-            ,reg_dtm
-            ,upd_dtm
-        ) values
+        `INSERT INTO zoz7184.NB_USER 
+        (    USER_ID
+            ,USER_EMAIL
+            ,USER_PW
+            ,USER_NAME
+            ,USER_PRF_IMG_NAME
+            ,REG_DTM
+            ,UPD_DTM
+        ) VALUES
         (    UUID()
             ,?
             ,?
             ,?
             ,?
-            ,now()
-            ,now()
+            ,NOW()
+            ,NOW()
         )`
         ,[req.body.email
             ,req.body.pw
@@ -76,13 +78,13 @@ router.post('/join.do',upload.array("atchFile"), function(req,res){
 router.post('/login.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
     connection.query(
-        `select user_id
-               ,user_name
-               ,user_email
-               ,user_status
-           from zoz7184.NB_USER 
-          where user_email = ? 
-            and user_pw = ?`
+        `SELECT USER_ID     AS userId
+               ,USER_NAME   AS userName
+               ,USER_EMAIL  AS userEmail
+               ,USER_STATUS AS userStatus
+           FROM zoz7184.NB_USER 
+          WHERE USER_EMAIL = ? 
+            AND USER_PW = ?`
         ,[req.body.email,req.body.pw ]
         ,function(err,results,fields){
             console.info("sql",this.sql);
@@ -128,9 +130,9 @@ router.post('/getUserList.do',function(req,res){
 
 function deleteFollow(selectedUserInfo,resId,res){
     connection.execQuery(
-        `delete from zoz7184.nb_follow
-          where follow_req_id = ?
-            and follow_res_id = ?
+        `DELETE FROM zoz7184.NB_FOLLOW
+          WHERE FOLLOW_REQ_ID = ?
+            AND FOLLOW_RES_ID = ?
         `
         ,[resId,selectedUserInfo.user_id]
         ,function(err,results){
@@ -145,13 +147,13 @@ function deleteFollow(selectedUserInfo,resId,res){
 
 function selectUserInfo(req,res,cb,cb2,sqlType){
     connection.execQuery(
-        `select user_id
-               ,user_name
-               ,user_email
-               ,user_status
-           from zoz7184.NB_USER 
-          where user_email = ? 
-            ${sqlType == 'follow' ? 'and user_email != ? ' : ''}
+        `SELECT USER_ID      AS userId
+               ,USER_NAME    AS userName
+               ,USER_EMAIL   AS userEmail
+               ,USER_STATUS  AS userStatus
+           FROM zoz7184.NB_USER  
+          WHERE USER_EMAIL = ? 
+            ${sqlType == 'follow' ? 'AND USER_EMAIL != ? ' : ''}
         `
         ,[req.body.email, req.session.user.user_email]
         ,function(err,results){
@@ -169,10 +171,10 @@ function selectUserInfo(req,res,cb,cb2,sqlType){
 }
 function selectFollowInfo(resUserInfo,reqId,res,cb){
     connection.execQuery(
-        `select count(*) AS cnt
-           from zoz7184.nb_follow
-          where follow_req_id = ?
-            and follow_res_id = ?
+        `SELECT COUNT(*) AS cnt
+           FROM zoz7184.NB_FOLLOW
+          WHERE FOLLOW_REQ_ID = ?
+            AND FOLLOW_RES_ID = ?
         `
         ,[reqId, resUserInfo.user_id]
         ,function(err,results){
@@ -191,23 +193,23 @@ function selectFollowInfo(resUserInfo,reqId,res,cb){
 
 function insertFollow(reqId,resId,res){
     connection.execQuery(
-        `insert into zoz7184.nb_follow
+        `INSERT INTO zoz7184.NB_FOLLOW
         (
-             follow_req_id
-            ,follow_res_id
-            ,reg_id
-            ,upd_id
-            ,reg_dtm
-            ,upd_dtm
+             FOLLOW_REQ_ID
+            ,FOLLOW_RES_ID
+            ,REG_ID
+            ,UPD_ID
+            ,REG_DTM
+            ,UPD_DTM
         )
-        values
+        VALUES
         (
              ?
             ,?
             ,?
             ,?
-            ,now()
-            ,now()
+            ,NOW()
+            ,NOW()
         )`
         ,[reqId,resId,reqId,reqId]
         ,function(err,results){
@@ -222,12 +224,12 @@ function insertFollow(reqId,resId,res){
 
 function selectUserList(searchData,cb){
     connection.execQuery(
-        `select user_id
-              , user_email
-              , user_name
-           from zoz7184.NB_USER
-          where user_email like CONCAT('%',?,'%')
-             or user_name like CONCAT('%',?,'%')
+        `SELECT USER_ID    AS userId
+              , USER_EMAIL AS userEmail
+              , USER_NAME  AS userName
+           FROM zoz7184.NB_USER
+          WHERE USER_EMAIL LIKE CONCAT('%',?,'%')
+             OR USER_NAME LIKE CONCAT('%',?,'%')
         `
         ,[searchData,searchData]
         ,function(err,results){

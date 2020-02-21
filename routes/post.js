@@ -34,7 +34,7 @@ router.post('/uploadpost.do',upload.array("atchFile"), function(req,res){
                 function task2(arg,callback) { 
                     postId = arg.insertId;
                     async.forEachOfLimit(req.files, 1, function(file, index, cb) {
-                        file.userId = req.session.user.user_id;
+                        file.userId = req.session.user.userId;
                         insertFileInfo(postId,file,cb);
                     },function eachEnd(err){ // Each End fnc;
                         if(err) throw err;
@@ -137,8 +137,8 @@ router.post('/deleteRecomment.do', function(req,res){
 /******************** [ functions ] ********************/
 function deleteRecomment(req,res){
     connection.execQuery(
-        `delete from zoz7184.NB_RECOMMENT
-          where recomment_id = ?
+        `DELETE FROM zoz7184.NB_RECOMMENT
+          WHERE RECOMMENT_ID = ?
         `,
         [Number(req.body.recommentId)],
         function(err,results){
@@ -154,27 +154,27 @@ function deleteRecomment(req,res){
 //댓글 등록
 function insertRecooment(req,res){
     connection.execQuery(
-        `insert into zoz7184.NB_RECOMMENT
+        `INSERT INTO zoz7184.NB_RECOMMENT
             (
-                post_id
-                ,recomment_content
-                ,reg_id
-                ,upd_id
-                ,reg_dtm
-                ,upd_dtm
+                POST_ID
+                ,RECOMMENT_CONTENT
+                ,REG_ID
+                ,UPD_ID
+                ,REG_DTM
+                ,UPD_DTM
             )VALUES(
                  ?
                 ,?
                 ,?
                 ,?
-                ,now()
-                ,now()
+                ,NOW()
+                ,NOW()
             )
         `,
         [req.body.postId
         ,req.body.content
-        ,req.session.user.user_id
-        ,req.session.user.user_id],
+        ,req.session.user.userId
+        ,req.session.user.userId],
         function(err,results){
             if(err) throw err;
             res.send(code.resResultObj("SUCC_02",results));
@@ -185,18 +185,18 @@ function insertRecooment(req,res){
 // 게시물 댓글조회
 function selectRecooment(post,cb){
     connection.execQuery(
-        `select r.recomment_id
-              , r.recomment_content
-              , r.reg_id
-              , r.reg_dtm
-              , u.user_email
-              , u.user_id
-              , u.user_name
-           from zoz7184.NB_RECOMMENT r
-              , zoz7184.NB_USER u
-          where r.reg_id = u.user_id
-            and r.post_id = ?
-          order by r.reg_dtm desc
+        `SELECT R.RECOMMENT_ID       AS recommentId
+              , R.RECOMMENT_CONTENT  AS recommentContent
+              , R.REG_ID             AS regId        
+              , R.REG_DTM            AS regDtm
+              , U.USER_EMAIL         AS userEmail
+              , U.USER_ID            AS userId
+              , U.USER_NAME          AS userName
+           FROM zoz7184.NB_RECOMMENT R
+              , zoz7184.NB_USER U
+          WHERE R.REG_ID = U.USER_ID
+            AND R.POST_ID = ?
+          ORDER BY R.REG_DTM DESC
         `
         ,[post.post_id]
         ,function(err,results){
@@ -213,23 +213,24 @@ function selectPostInUserPage(req,res,cb){
     if(!req.body.start) req.body.start = 0;
     if(!req.body.unit) req.body.unit = 10;
     connection.execQuery(
-        `select post_id
-          ,post_content
-          ,post_hashtag
-          ,reg_dtm
-          ,reg_id
-          ,upd_dtm
-          ,upd_id
-          ,(select user_name
-              from zoz7184.NB_USER u
-             where p.reg_id = u.user_id) as user_name
-          from zoz7184.NB_POST p
-         where reg_id = (
-                            select user_id
-                              from zoz7184.NB_USER
-                             where user_email = ?
+        `SELECT 
+                POST_ID       AS postId
+              , POST_CONTENT  AS postContent
+              , POST_HASHTAG  AS postHashtag
+              , REG_DTM       AS regDtm
+              , REG_ID        AS regId
+              , UPD_DTM       AS updDtm
+              , UPD_ID        AS updId
+              , (SELECT USER_NAME
+                   FROM zoz7184.NB_USER U
+                  WHERE P.REG_ID = U.USER_ID) AS userName
+          FROM zoz7184.NB_POST P
+         WHERE REG_ID = (
+                            SELECT USER_ID
+                              FROM zoz7184.NB_USER
+                             WHERE USER_EMAIL = ?
                         )
-         limit ? , ?
+         LIMIT ? , ?
         `
         ,[req.body.email, Number(req.body.start), Number(req.body.unit)]
         ,function(err,results){
@@ -245,12 +246,12 @@ function selectPostInUserPage(req,res,cb){
 // 게시물 좋아요
 function selectLike(req,res,likeCb,unLikeCb){
     connection.execQuery(
-        `select count(*) as cnt
-           from zoz7184.nb_like
-          where post_id = ?
-            and reg_id = ?
+        `SELECT COUNT(*) AS cnt
+           FROM zoz7184.NB_LIKE
+          WHERE POST_ID = ?
+            AND REG_ID = ?
         `
-        ,[req.body.postId,req.session.user.user_id]
+        ,[req.body.postId,req.session.user.userId]
         ,function(err,results){
             if(err){
                 res.send(code.resResultObj("ERR_01",err));
@@ -258,9 +259,9 @@ function selectLike(req,res,likeCb,unLikeCb){
             }
             console.log(results);
             if(results[0].cnt != 0){
-                unLikeCb(req.body.postId,req.session.user.user_id,res);
+                unLikeCb(req.body.postId,req.session.user.userId,res);
             }else{
-                likeCb(req.body.postId,req.session.user.user_id,res);
+                likeCb(req.body.postId,req.session.user.userId,res);
             }
         }
     );
@@ -269,19 +270,19 @@ function selectLike(req,res,likeCb,unLikeCb){
 // 좋아요 등록
 function insertLikePost(postId,userId,res){
     connection.execQuery(
-        `insert into zoz7184.nb_like
+        `INSERT INTO zoz7184.NB_LIKE
          (
-             post_id
-            ,reg_id
-            ,upd_id
-            ,reg_dtm
-            ,upd_dtm
-         ) values (
+             POST_ID
+            ,REG_ID
+            ,UPD_ID
+            ,REG_DTM
+            ,UPD_DTM
+         ) VALUES (
               ?
              ,?
              ,?
-             ,now()
-             ,now()
+             ,NOW()
+             ,NOW()
          )
         `
         ,[postId,userId,userId]
@@ -298,9 +299,9 @@ function insertLikePost(postId,userId,res){
 // 좋아요 해제
 function deleteLikePost(postId,userId,res){
     connection.execQuery(
-        `delete from zoz7184.nb_like
-          where post_id = ?
-            and reg_id = ?
+        `DELETE FROM zoz7184.NB_LIKE
+          WHERE POST_ID = ?
+            AND REG_ID = ?
         `
         ,[postId,userId]
         ,function(err,results){
@@ -318,40 +319,40 @@ function selectPostList(req,cb){
     if(! req.body.start) req.body.start = 0
     if(! req.body.unit)  req.body.unit = 10;
     connection.execQuery(
-        `select post_id
-               ,post_content
-               ,post_hashtag
-               ,reg_dtm
-               ,reg_id
-               ,upd_dtm
-               ,upd_id
-               ,(select user_name
-                from zoz7184.NB_USER u
-               where p.reg_id = u.user_id) as user_name
-           from zoz7184.NB_POST p
-          where reg_id = ?
-             or reg_id in ( 
-                           select follow_res_id 
-                             from zoz7184.NB_FOLLOW 
-                            where follow_req_id = ? 
+        `SELECT POST_ID       AS postId
+               ,POST_CONTENT  AS postContent
+               ,POST_HASHTAG  AS postHashtag
+               ,REG_DTM       AS regDtm
+               ,REG_ID        AS regId
+               ,UPD_DTM       AS updDtm
+               ,UPD_ID        AS updId
+               ,(SELECT USER_NAME
+                FROM zoz7184.NB_USER U
+               WHERE P.REG_ID = U.USER_ID) AS userName
+           FROM zoz7184.NB_POST P
+          WHERE REG_ID = ?
+             OR REG_ID IN ( 
+                           SELECT FOLLOW_RES_ID 
+                             FROM zoz7184.NB_FOLLOW 
+                            WHERE FOLLOW_REQ_ID = ? 
                          )
-             or post_id in (
-                            select post_id
-                              from zoz7184.NB_LIKE
-                             where reg_id = ?
+             OR POST_ID IN (
+                            SELECT POST_ID
+                              FROM zoz7184.NB_LIKE
+                             WHERE REG_ID = ?
                           )
-             or post_id in (
-                            select post_id
-                              from zoz7184.NB_RECOMMENT
-                             where reg_id = ?
+             OR POST_ID IN (
+                            SELECT POST_ID
+                              FROM zoz7184.NB_RECOMMENT
+                             WHERE REG_ID = ?
                           )
-          order by upd_dtm desc
-          limit ? , ?
+          ORDER BY UPD_DTM DESC
+          LIMIT ? , ?
         `
-        ,[req.session.user.user_id
-         ,req.session.user.user_id
-         ,req.session.user.user_id
-         ,req.session.user.user_id
+        ,[req.session.user.userId
+         ,req.session.user.userId
+         ,req.session.user.userId
+         ,req.session.user.userId
          ,req.body.start
          ,req.body.unit]
         ,function(err,postResults){
@@ -364,16 +365,16 @@ function selectPostList(req,cb){
 //SELECT FILE LIST IN DB
 function selectAtchFileList(postInfo,cb){
     connection.execQuery(
-        `select post_id
-                ,file_id
-                ,file_snm
-                ,file_onm
-                ,file_path
-           from zoz7184.NB_ATCH_FILE
-          where post_id = ?
-          order by upd_dtm desc
+        `SELECT  POST_ID   AS postId
+                ,FILE_ID   AS fileId
+                ,FILE_SNM  AS fileSnm
+                ,FILE_ONM  AS fileOnm
+                ,FILE_PATH AS filePath
+           FROM zoz7184.NB_ATCH_FILE
+          WHERE POST_ID = ?
+          ORDER BY UPD_DTM DESC
         `
-        ,[postInfo.post_id]
+        ,[postInfo.postId]
         , function(err,fileResults){
             if(err) throw err;
             postInfo.fileArr = fileResults;
@@ -385,8 +386,8 @@ function selectAtchFileList(postInfo,cb){
 //DELETE POST IN DB
 function deletePostInfo(postId){
     connection.execQuery(
-        `delete from zoz7184.NB_POST 
-          where post_id = ? 
+        `DELETE FROM zoz7184.NB_POST 
+          WHERE POST_ID = ? 
         `
         ,[postId]
         ,function (err,results){
@@ -399,8 +400,8 @@ function deletePostInfo(postId){
 //DELETE FILE IN DB
 function deleteFileInfo(postId){
     connection.execQuery(
-        `delete from zoz7184.NB_ATCH_FILE 
-          where post_id = ? 
+        `DELETE FROM zoz7184.NB_ATCH_FILE 
+          WHERE POST_ID = ? 
         `
         ,[postId]
         ,function (err,results){
@@ -424,7 +425,7 @@ function insertPostInfo(req,cb){
     connection.execQuery(
         `insert into zoz7184.NB_POST 
         (
-            post_content
+             post_content
             ,post_hashtag
             ,reg_id
             ,upd_id
@@ -440,8 +441,8 @@ function insertPostInfo(req,cb){
         )`
         ,[req.body.content
             ,req.body.hashtag
-            ,req.session.user.user_id
-            ,req.session.user.user_id]
+            ,req.session.user.userId
+            ,req.session.user.userId]
         ,function (err,results){
             if(err) throw err;
             cb(null,results);
