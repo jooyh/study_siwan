@@ -40,6 +40,11 @@ router.post('/idcheck.do',function(req,res){
 router.post('/join.do',upload.array("atchFile"), function(req,res){
 // router.post('/join.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
+
+    // crypto.pbkdf2('비밀번호', "nulbo_salt_20190520" , 100000, 64, 'sha512', (err, key) => {
+    //     console.log(key.toString('base64'));
+    // });
+
     connection.query( 
         `INSERT INTO zoz7184.NB_USER 
         (    USER_ID
