@@ -20,12 +20,12 @@ const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }
 
 /* Email 중복체크 */
 router.post('/idcheck.do',function(req,res){
-    connection.query(
+    connection.execQuery(
         `SELECT COUNT(*) AS cnt 
            FROM zoz7184.NB_USER 
           WHERE USER_EMAIL = ?`
         ,[req.body.email]
-        ,function(err,results,fields){
+        ,function(err,results){
             console.info("sql",this.sql);
             if(err){
                 res.send(code.resResultObj("ERR_01",err));
@@ -45,7 +45,7 @@ router.post('/join.do',upload.array("atchFile"), function(req,res){
     //     console.log(key.toString('base64'));
     // });
 
-    connection.query( 
+    connection.execQuery( 
         `INSERT INTO zoz7184.NB_USER 
         (    USER_ID
             ,USER_EMAIL
@@ -68,7 +68,7 @@ router.post('/join.do',upload.array("atchFile"), function(req,res){
             ,req.body.name
             ,req.body.files[0].filename
         ]
-        ,function(err,results,fields){
+        ,function(err,results){
             console.info("sql",this.sql);
             if(err){
                 res.send(code.resResultObj("ERR_02",err));
@@ -82,7 +82,7 @@ router.post('/join.do',upload.array("atchFile"), function(req,res){
 /* LOGIN */
 router.post('/login.do',function(req,res){
     req.body.pw = crypto.createHash('sha512').update(req.body.pw).digest('base64'); 
-    connection.query(
+    connection.execQuery(
         `SELECT USER_ID     AS userId
                ,USER_NAME   AS userName
                ,USER_EMAIL  AS userEmail
@@ -91,7 +91,7 @@ router.post('/login.do',function(req,res){
           WHERE USER_EMAIL = ? 
             AND USER_PW = ?`
         ,[req.body.email,req.body.pw ]
-        ,function(err,results,fields){
+        ,function(err,results){
             console.info("sql",this.sql);
             if(err){
                 res.send(code.resResultObj("ERR_01",err));
