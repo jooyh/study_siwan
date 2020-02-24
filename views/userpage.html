@@ -5,24 +5,24 @@
         </div>
         <ul class="user-info-list">
             <li>
-                <strong class="num">1.2K</strong>
+                <strong class="num" id="postCnt">1.2K</strong>
                 <span class="title">게시물</span>
             </li>
             <li>
-                <strong class="num">1,000</strong>
+                <strong class="num" id="followerCnt">1,000</strong>
                 <span class="title">팔로워</span>
             </li>
             <li>
-                <strong class="num">300</strong>
+                <strong class="num" id="followingCnt">300</strong>
                 <span class="title">팔로잉</span>
             </li>
         </ul>
     </div>
     <div class="user-info-center">
-        <p class="user-name">개볶치</p>
-        <p class="txt">나는야 개볶치. 나는야 주먼지. 나는야 주마루나는야 개볶치. 나는야 주먼지. 나는야 주마루.</p>
+        <p class="user-name" id="userNm">개볶치</p>
+        <p class="txt" id="userContent">나는야 개볶치. 나는야 주먼지. 나는야 주마루.</p>
         <div class="btn-area type02">
-            <button type="button" class="btn-basic">프로필 수정</button>
+            <button type="button" class="btn-basic" id="updateBtn">프로필 수정</button>
         </div>
     </div>
     <div class="user-post-list-box">
@@ -72,16 +72,37 @@
 <script type="text/javascript">
     fn_getUserPage();
 
+    $("#updateBtn").on("click",function(){
+        fn_updateProfile();
+    });
+
+    //유저정보 가져오기
     function fn_getUserPage() {
-        var input = document.getElementById("reg-email");
+        console.log("세션",sessionStorage);
+        var userInfo = JSON.parse(sessionStorage.getItem("user"));
         var data = {};
-        //data.id = input.value;
-        data.id = "1";
+        data.id = userInfo.user_id;
         transaction(data,{
             url : '/userpage/getUserPage.do'
             ,success : function(result){
-                console.log(result);
+                //console.log(result);
+                fn_setUserPage(result[0]);
             }
         });
+    }
+
+    //유저정보 페이지에 세팅
+    function fn_setUserPage(resData){
+        console.log("데이터",resData);
+        $("#userNm").text(resData.user_name);
+        $("#postCnt").text(resData.post_cnt);
+        $("#followerCnt").text(resData.follow_res_cnt);
+        $("#followingCnt").text(resData.follow_req_cnt);
+        $("#userContent").text(resData.user_content);
+    }
+
+    //유저프로필 수정
+    function fn_updateProfile(){
+        
     }
 </script>
