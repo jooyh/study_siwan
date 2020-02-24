@@ -1,18 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var createError      = require('http-errors');
+var express          = require('express');
+var path             = require('path');
+var cookieParser     = require('cookie-parser');
+var logger           = require('morgan');
 
-const compression = require('compression')
-const helmet	= require('helmet');
-const sessionParser = require('express-session');
+const compression    = require('compression')
+const helmet	     = require('helmet');
+const sessionParser  = require('express-session');
 
-const indexRouter   = require('./routes/index.js');
-const accountRouter = require('./routes/account.js');
-const postRouter    = require('./routes/post.js');
-const chatRouter    = require('./routes/chat.js');
-const userPageRouter    = require('./routes/userpage.js');
+const indexRouter    = require('./routes/index.js');
+const accountRouter  = require('./routes/account.js');
+const postRouter     = require('./routes/post.js');
+const chatRouter     = require('./routes/chat.js');
+const userPageRouter = require('./routes/userpage.js');
 
 var app = express();
 
@@ -65,11 +65,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
-app.use('/'       ,indexRouter);
-app.use('/account',accountRouter);
-app.use('/post'   ,postRouter);
-app.use('/chat'   ,chatRouter);
-app.use('/userpage',userPageRouter);
+app.use('/'         ,indexRouter);
+app.use('/account'  ,accountRouter);
+app.use('/post'     ,postRouter);
+app.use('/chat'     ,chatRouter);
+app.use('/userpage' ,userPageRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -64,9 +64,6 @@
             </li>
         </ul>
     </div>
-
-
-
 </div>
 
 <script type="text/javascript">
@@ -81,12 +78,12 @@
         console.log("세션",sessionStorage);
         var userInfo = JSON.parse(sessionStorage.getItem("user"));
         var data = {};
-        data.id = userInfo.user_id;
+        data.id = userInfo.userId;
         transaction(data,{
             url : '/userpage/getUserPage.do'
             ,success : function(result){
-                //console.log(result);
-                fn_setUserPage(result[0]);
+                console.log(result);
+                // fn_setUserPage(result[0]);
             }
         });
     }
